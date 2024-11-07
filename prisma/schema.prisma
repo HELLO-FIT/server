@@ -10,3 +10,52 @@ datasource db {
 model User {
   id String @id
 }
+
+model Facility {
+  businessId    String
+  serialNumber  String
+  name          String
+  cityCode      String
+  cityName      String
+  localCode     String
+  localName     String
+  address       String
+  detailAddress String?
+  owner         String
+  phone         String?
+
+  @@id([businessId, serialNumber])
+}
+
+model Course {
+  businessId           String
+  facilitySerialNumber String
+  courseId             String
+  courseName           String
+  itemCode             String
+  itemName             String
+  instructor           String?
+  startTime            String
+  endTime              String
+  workday              String
+  price                Int
+
+  @@id([businessId, courseId])
+}
+
+model CourseHistory {
+  businessId       String
+  facilityName     String
+  itemCode         String
+  itemName         String
+  address          String
+  detailAddress    String?
+  courseName       String
+  courseId         String
+  startDate        DateTime @db.Date
+  endDate          DateTime @db.Date
+  participantCount Int
+  price            Int
+
+  @@id([courseId, startDate])
+}

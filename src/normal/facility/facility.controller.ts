@@ -42,7 +42,7 @@ export class FacilityController {
     name: 'facilityName',
     description: '시설 명 - 시설명이 있으면 localCode, itemName은 무시됩니다',
     required: false,
-    example: 'TF 복싱짐',
+    example: '예다함 태권도',
   })
   @ApiResponse({
     status: 200,

@@ -33,6 +33,6 @@ export class FacilitiesDto {
   @ApiProperty({ description: '대표자명' })
   owner: string;
 
-  @ApiProperty({ description: '종목명 전부', example: '태권도,탁구' })
-  items: string;
+  @ApiProperty({ description: '종목명 리스트', type: String, isArray: true })
+  items: string[];
 }

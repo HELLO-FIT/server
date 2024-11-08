@@ -134,6 +134,17 @@ export class FacilityRepository {
       };
     });
   }
+
+  async findOne(businessId: string, serialNumber: string) {
+    return await this.prisma.facility.findUniqueOrThrow({
+      where: {
+        businessId_serialNumber: {
+          businessId,
+          serialNumber,
+        },
+      },
+    });
+  }
 }
 
 export type FacilitiesInfo = {

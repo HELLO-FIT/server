@@ -133,7 +133,7 @@ describe('GET /normal/facilities/popular - 인기 있는 시설 목록 받기', 
         detailAddress: null,
         owner: 'test1',
         totalParticipantCount: 30,
-        items: 'test1',
+        items: ['test1'],
       },
     ]);
   });

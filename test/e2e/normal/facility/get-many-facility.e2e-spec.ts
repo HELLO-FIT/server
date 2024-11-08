@@ -99,7 +99,7 @@ describe('GET /normal/facilities - 시설 목록 받기', () => {
         address: 'test1',
         detailAddress: null,
         owner: 'test1',
-        items: 'test1',
+        items: ['test1'],
       },
     ]);
   });
@@ -184,7 +184,7 @@ describe('GET /normal/facilities - 시설 목록 받기', () => {
         address: 'test1',
         detailAddress: null,
         owner: 'test1',
-        items: '태권도',
+        items: ['태권도'],
       },
     ]);
   });
@@ -254,7 +254,7 @@ describe('GET /normal/facilities - 시설 목록 받기', () => {
         address: 'test1',
         detailAddress: null,
         owner: 'test1',
-        items: 'test1',
+        items: ['test1'],
       },
     ]);
   });

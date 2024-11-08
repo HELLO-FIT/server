@@ -1,8 +1,22 @@
-import { Controller, Get, Query, HttpException } from '@nestjs/common';
-import { ApiTags, ApiQuery, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Query, HttpException, Param } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiQuery,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+} from '@nestjs/swagger';
 import { FacilityService } from './facility.service';
-import { GetFacilitiesDto, GetPopularFacilitiesDto } from './dto/request';
-import { FacilitiesDto, PopularFacilitiesDto } from './dto/response';
+import {
+  GetFacilitiesDto,
+  GetPopularFacilitiesDto,
+  GetFacilityDetailDto,
+} from './dto/request';
+import {
+  FacilitiesDto,
+  PopularFacilitiesDto,
+  FacilityDetail,
+} from './dto/response';
 
 @ApiTags('normal/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
@@ -77,5 +91,28 @@ export class FacilityController {
     @Query() { localCode }: GetPopularFacilitiesDto,
   ): Promise<PopularFacilitiesDto[]> {
     return await this.facilityService.getManyPopularByLocalCode(localCode);
+  }
+
+  @ApiOperation({ summary: '일반시설 상세 정보 받기' })
+  @ApiParam({
+    name: 'businessId',
+    description: '사업자 등록 번호',
+    example: '1209094142',
+  })
+  @ApiParam({
+    name: 'serialNumber',
+    description: '시설 일련 번호',
+    example: '1',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '시설 상세 정보 받기 성공',
+    type: FacilityDetail,
+  })
+  @Get(':businessId/:serialNumber')
+  async getDetail(
+    @Param() { businessId, serialNumber }: GetFacilityDetailDto,
+  ): Promise<FacilityDetail> {
+    return await this.facilityService.getDetail(businessId, serialNumber);
   }
 }

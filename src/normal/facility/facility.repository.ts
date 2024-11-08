@@ -42,6 +42,25 @@ export class FacilityRepository {
       where "localCode" = ${localCode} and c."itemName" = ${itemName};
     `) as FacilitiesInfo[];
   }
+
+  async findManyByFacilityName(facilityName: string) {
+    return (await this.prisma.$queryRaw`
+      select distinct
+        f."businessId",
+        f."serialNumber",
+        f."name",
+        f."cityCode",
+        f."cityName",
+        f."localCode",
+        f."localName",
+        f."address",
+        f."detailAddress",
+        f."owner"
+      from "Facility" f join "Course" c
+      on f."businessId" = c."businessId" and f."serialNumber" = c."facilitySerialNumber"
+      where f."name" like ${`%${facilityName}%`};
+    `) as FacilitiesInfo[];
+  }
 }
 
 export type FacilitiesInfo = {

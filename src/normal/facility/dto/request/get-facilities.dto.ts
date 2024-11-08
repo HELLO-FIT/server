@@ -1,11 +1,15 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class GetFacilitiesDto {
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  localCode: string;
+  localCode?: string;
 
   @IsOptional()
   @IsString()
   itemName?: string;
+
+  @IsOptional()
+  @IsString()
+  facilityName?: string;
 }

@@ -15,4 +15,8 @@ export class FacilityService {
       itemName,
     );
   }
+
+  async getManyByFacilityName(facilityName: string) {
+    return await this.facilityRepository.findManyByFacilityName(facilityName);
+  }
 }

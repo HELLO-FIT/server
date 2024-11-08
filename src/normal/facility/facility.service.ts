@@ -19,4 +19,8 @@ export class FacilityService {
   async getManyByFacilityName(facilityName: string) {
     return await this.facilityRepository.findManyByFacilityName(facilityName);
   }
+
+  async getManyPopularByLocalCode(localCode: string) {
+    return await this.facilityRepository.findManyPopularByLocalCode(localCode);
+  }
 }

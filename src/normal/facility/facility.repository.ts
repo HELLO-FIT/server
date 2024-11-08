@@ -81,56 +81,59 @@ export class FacilityRepository {
     `) as FacilitiesInfo[];
   }
 
-  // async findManyPopularByLocalCode(localCode: string) {
-  //   const data = (await this.prisma.$queryRaw`
-  //     select
-  //       a."businessId",
-  //       a."serialNumber",
-  //       b."name",
-  //       b."cityCode",
-  //       b."cityName",
-  //       b."localCode",
-  //       b."localName",
-  //       b."address",
-  //       b."detailAddress",
-  //       b."owner",
-  //       a."totalParticipantCount"
-  //     from (
-  //       select
-  //         f."businessId",
-  //         f."serialNumber",
-  //         sum(ch."participantCount") as "totalParticipantCount"
-  //       from "Facility" f
-  //         join "Course" c
-  //           on f."businessId" = c."businessId" and f."serialNumber" = c."facilitySerialNumber"
-  //         join "CourseHistory" ch
-  //           on f."businessId" = ch."businessId" and c."courseId" = ch."courseId"
-  //       where "localCode" = ${localCode}
-  //       group by f."businessId", f."serialNumber"
-  //     ) a join "Facility" b
-  //       on a."businessId" = b."businessId" and a."serialNumber" = b."serialNumber"
-  //     order by a."totalParticipantCount" desc
-  //   `) as {
-  //     businessId: string;
-  //     serialNumber: string;
-  //     name: string;
-  //     cityCode: string;
-  //     cityName: string;
-  //     localCode: string;
-  //     localName: string;
-  //     address: string;
-  //     detailAddress: string | null;
-  //     owner: string;
-  //     totalParticipantCount: number;
-  //   }[];
+  async findManyPopularByLocalCode(localCode: string) {
+    const data = (await this.prisma.$queryRaw`
+      select
+        a."businessId",
+        a."serialNumber",
+        b."name",
+        b."cityCode",
+        b."cityName",
+        b."localCode",
+        b."localName",
+        b."address",
+        b."detailAddress",
+        b."owner",
+        a."totalParticipantCount",
+        a."items"
+      from (
+        select
+          f."businessId",
+          f."serialNumber",
+          sum(ch."participantCount") as "totalParticipantCount",
+          string_agg(distinct c."itemName", ',') as "items"
+        from "Facility" f
+          join "Course" c
+            on f."businessId" = c."businessId" and f."serialNumber" = c."facilitySerialNumber"
+          join "CourseHistory" ch
+            on f."businessId" = ch."businessId" and c."courseId" = ch."courseId"
+        where "localCode" = ${localCode}
+        group by f."businessId", f."serialNumber"
+      ) a join "Facility" b
+        on a."businessId" = b."businessId" and a."serialNumber" = b."serialNumber"
+      order by a."totalParticipantCount" desc
+    `) as {
+      businessId: string;
+      serialNumber: string;
+      name: string;
+      cityCode: string;
+      cityName: string;
+      localCode: string;
+      localName: string;
+      address: string;
+      detailAddress: string | null;
+      owner: string;
+      totalParticipantCount: number;
+      items: string;
+    }[];
 
-  //   return data.map((item) => {
-  //     return {
-  //       ...item,
-  //       totalParticipantCount: Number(item.totalParticipantCount),
-  //     };
-  //   });
-  // }
+    return data.map((item) => {
+      return {
+        ...item,
+        totalParticipantCount: Number(item.totalParticipantCount),
+      };
+    });
+  }
 }
 
 export type FacilitiesInfo = {

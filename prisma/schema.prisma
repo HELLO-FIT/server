@@ -59,3 +59,50 @@ model CourseHistory {
 
   @@id([courseId, startDate])
 }
+
+model SpecialFacility {
+  businessId    String  @id
+  name          String
+  cityCode      String
+  cityName      String
+  localCode     String
+  localName     String
+  address       String
+  detailAddress String?
+  phone         String?
+}
+
+model SpecialCourse {
+  businessId String
+  courseId   String
+  courseName String
+  itemName   String
+  startTime  String
+  endTime    String
+  workday    String
+  price      Int
+
+  @@id([businessId, courseId])
+}
+
+model SpecialCourseHistory {
+  businessId       String
+  facilityName     String
+  itemCode         String
+  itemName         String
+  address          String
+  detailAddress    String?
+  courseName       String
+  courseId         String
+  startDate        DateTime @db.Date
+  endDate          DateTime @db.Date
+  participantCount Int
+  price            Int
+  cityCode         String
+  cityName         String
+  localCode        String
+  localName        String
+  phone            String?
+
+  @@id([businessId, courseId, startDate])
+}

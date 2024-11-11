@@ -16,4 +16,19 @@ export class SpecialFacilityService {
       };
     });
   }
+
+  async getManyByLocalCodeAndItemName(localCode: string, itemName: string) {
+    const facilities =
+      await this.specialFacilityRepository.findManyByLocalCodeAndItemName(
+        localCode,
+        itemName,
+      );
+
+    return facilities.map((facility) => {
+      return {
+        ...facility,
+        items: facility.items.split(','),
+      };
+    });
+  }
 }

@@ -43,6 +43,10 @@ export class SpecialFacilityController {
       }
 
       if (itemName) {
+        return await this.specialFacilityService.getManyByLocalCodeAndItemName(
+          localCode,
+          itemName,
+        );
       } else {
         return await this.specialFacilityService.getManyByLocalCode(localCode);
       }

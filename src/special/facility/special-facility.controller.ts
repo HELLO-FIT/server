@@ -2,6 +2,7 @@ import { Controller, Get, Query, HttpException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { SpecialFacilityService } from './special-facility.service';
 import { GetSpecialFacilitiesDto } from './dto/request';
+import { SpecialFacilitiesDto } from './dto/response';
 
 @ApiTags('/special/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
@@ -29,10 +30,16 @@ export class SpecialFacilityController {
     required: false,
     example: '죽전탁구',
   })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: SpecialFacilitiesDto,
+    isArray: true,
+  })
   @Get()
   async getMany(
     @Query() { localCode, itemName, facilityName }: GetSpecialFacilitiesDto,
-  ) {
+  ): Promise<SpecialFacilitiesDto[]> {
     if (facilityName) {
       return await this.specialFacilityService.getManyByFacilityName(
         facilityName,

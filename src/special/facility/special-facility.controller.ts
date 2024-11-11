@@ -1,8 +1,14 @@
 import { Controller, Get, Query, HttpException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { SpecialFacilityService } from './special-facility.service';
-import { GetSpecialFacilitiesDto } from './dto/request';
-import { SpecialFacilitiesDto } from './dto/response';
+import {
+  GetSpecialFacilitiesDto,
+  GetPopularSpecialFacilitiesDto,
+} from './dto/request';
+import {
+  SpecialFacilitiesDto,
+  PopularSpecialFacilitiesDto,
+} from './dto/response';
 
 @ApiTags('/special/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
@@ -61,5 +67,26 @@ export class SpecialFacilityController {
         return await this.specialFacilityService.getManyByLocalCode(localCode);
       }
     }
+  }
+
+  @ApiOperation({ summary: '특수 인기시설 목록 받기' })
+  @ApiQuery({
+    name: 'localCode',
+    description: '5자리 지역코드',
+    example: '11680',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    isArray: true,
+    type: PopularSpecialFacilitiesDto,
+  })
+  @Get('popular')
+  async getManyPopularByLocalCode(
+    @Query() { localCode }: GetPopularSpecialFacilitiesDto,
+  ): Promise<PopularSpecialFacilitiesDto[]> {
+    return await this.specialFacilityService.getManyPopularByLocalCode(
+      localCode,
+    );
   }
 }

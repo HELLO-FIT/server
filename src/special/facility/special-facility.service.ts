@@ -42,4 +42,10 @@ export class SpecialFacilityService {
       };
     });
   }
+
+  async getManyPopularByLocalCode(localCode: string) {
+    return await this.specialFacilityRepository.findManyPopularByLocalCode(
+      localCode,
+    );
+  }
 }

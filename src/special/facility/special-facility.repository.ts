@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -131,9 +131,13 @@ export class SpecialFacilityRepository {
   }
 
   async findOne(businessId: string) {
-    return await this.prisma.specialFacility.findUniqueOrThrow({
+    const facility = await this.prisma.specialFacility.findUnique({
       where: { businessId },
     });
+    if (!facility) {
+      throw new HttpException('시설이 존재하지 않습니다.', 404);
+    }
+    return facility;
   }
 }
 

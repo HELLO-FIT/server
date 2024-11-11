@@ -34,6 +34,9 @@ export class SpecialFacilityController {
     @Query() { localCode, itemName, facilityName }: GetSpecialFacilitiesDto,
   ) {
     if (facilityName) {
+      return await this.specialFacilityService.getManyByFacilityName(
+        facilityName,
+      );
     } else {
       if (!localCode) {
         throw new HttpException(

@@ -165,4 +165,66 @@ describe('GET /special/facilities - 특수시설 목록 받기', () => {
       },
     ]);
   });
+
+  it('시설명을 검색하면 현재강좌가 있는 시설중 시설명이 포함된 특수시설을 반환한다', async () => {
+    // given
+    await prisma.specialFacility.createMany({
+      data: [
+        {
+          businessId: 'test1',
+          name: '죽전탁구클럽',
+          cityCode: 'test1',
+          cityName: 'test1',
+          localCode: '12345',
+          localName: 'test1',
+          address: 'test1',
+          detailAddress: null,
+        },
+        {
+          businessId: 'test2',
+          name: '죽전탁구클럽',
+          cityCode: 'test2',
+          cityName: 'test2',
+          localCode: '12345',
+          localName: 'test2',
+          address: 'test2',
+          detailAddress: null,
+        },
+      ],
+    });
+
+    await prisma.specialCourse.create({
+      data: {
+        businessId: 'test1',
+        courseId: 'test1',
+        courseName: 'test1',
+        itemName: 'test1',
+        startTime: 'test1',
+        endTime: 'test1',
+        workday: 'test1',
+        price: 10000,
+      },
+    });
+
+    // when
+    const { status, body } = await request(app.getHttpServer()).get(
+      '/special/facilities?facilityName=죽전탁구',
+    );
+
+    // then
+    expect(status).toBe(200);
+    expect(body).toEqual([
+      {
+        businessId: 'test1',
+        name: '죽전탁구클럽',
+        cityCode: 'test1',
+        cityName: 'test1',
+        localCode: '12345',
+        localName: 'test1',
+        address: 'test1',
+        detailAddress: null,
+        items: ['test1'],
+      },
+    ]);
+  });
 });

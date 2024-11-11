@@ -18,7 +18,7 @@ import {
   FacilityDetail,
 } from './dto/response';
 
-@ApiTags('normal/facilities')
+@ApiTags('/normal/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
 @Controller('normal/facilities')
 export class FacilityController {

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CourseDetailDto {
+export class SpecialCourseDto {
   @ApiProperty({ description: '강좌 번호' })
   courseId: string;
 
@@ -9,9 +9,6 @@ export class CourseDetailDto {
 
   @ApiProperty({ description: '종목 명' })
   itemName: string;
-
-  @ApiProperty({ description: '강사 명', nullable: true, type: String })
-  instructor: string | null;
 
   @ApiProperty({ description: '시작 시간', example: '09:00' })
   startTime: string;
@@ -26,12 +23,9 @@ export class CourseDetailDto {
   price: number;
 }
 
-export class FacilityDetail {
+export class SpecialFacilityDetailDto {
   @ApiProperty({ description: '사업자 등록 번호' })
   businessId: string;
-
-  @ApiProperty({ description: '시설 일련 번호' })
-  serialNumber: string;
 
   @ApiProperty({ description: '시설 명' })
   name: string;
@@ -54,9 +48,6 @@ export class FacilityDetail {
   @ApiProperty({ description: '상세 주소', nullable: true, type: String })
   detailAddress: string | null;
 
-  @ApiProperty({ description: '대표자명' })
-  owner: string;
-
   @ApiProperty({ description: '시설 전화번호', nullable: true, type: String })
   phone: string | null;
 
@@ -65,8 +56,8 @@ export class FacilityDetail {
 
   @ApiProperty({
     description: '강좌 리스트',
-    type: CourseDetailDto,
+    type: SpecialCourseDto,
     isArray: true,
   })
-  courses: CourseDetailDto[];
+  courses: SpecialCourseDto[];
 }

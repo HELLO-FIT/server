@@ -129,6 +129,12 @@ export class SpecialFacilityRepository {
       };
     });
   }
+
+  async findOne(businessId: string) {
+    return await this.prisma.specialFacility.findUniqueOrThrow({
+      where: { businessId },
+    });
+  }
 }
 
 export type SpecialFacilitiesInfo = {

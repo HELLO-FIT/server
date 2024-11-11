@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { SpecialFacilityRepository } from './special-facility.repository';
+import { SpecialCourseRepository } from '../course/special-course.repository';
 
 @Injectable()
 export class SpecialFacilityService {
-  constructor(private specialFacilityRepository: SpecialFacilityRepository) {}
+  constructor(
+    private specialFacilityRepository: SpecialFacilityRepository,
+    private specialCourseRepository: SpecialCourseRepository,
+  ) {}
 
   async getManyByLocalCode(localCode: string) {
     const facilities =
@@ -47,5 +51,30 @@ export class SpecialFacilityService {
     return await this.specialFacilityRepository.findManyPopularByLocalCode(
       localCode,
     );
+  }
+
+  async getDetail(businessId: string) {
+    const [facility, courses] = await Promise.all([
+      this.specialFacilityRepository.findOne(businessId),
+      this.specialCourseRepository.findManyByFacility(businessId),
+    ]);
+
+    const items = new Set(courses.map((course) => course.itemName));
+
+    return {
+      ...facility,
+      items: Array.from(items),
+      courses: courses.map((course) => {
+        return {
+          courseId: course.courseId,
+          courseName: course.courseName,
+          itemName: course.itemName,
+          startTime: course.startTime,
+          endTime: course.endTime,
+          workday: course.workday,
+          price: course.price,
+        };
+      }),
+    };
   }
 }

@@ -1,5 +1,11 @@
-import { Controller, Get, Query, HttpException } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Query, HttpException, Param } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiParam,
+} from '@nestjs/swagger';
 import { SpecialFacilityService } from './special-facility.service';
 import {
   GetSpecialFacilitiesDto,
@@ -8,6 +14,7 @@ import {
 import {
   SpecialFacilitiesDto,
   PopularSpecialFacilitiesDto,
+  SpecialFacilityDetailDto,
 } from './dto/response';
 
 @ApiTags('/special/facilities')
@@ -88,5 +95,23 @@ export class SpecialFacilityController {
     return await this.specialFacilityService.getManyPopularByLocalCode(
       localCode,
     );
+  }
+
+  @ApiOperation({ summary: '특수시설 상세 정보 받기' })
+  @ApiParam({
+    name: 'businessId',
+    description: '사업자 등록 번호',
+    example: '7607000537',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: SpecialFacilityDetailDto,
+  })
+  @Get(':businessId')
+  async getDetail(
+    @Param('businessId') businessId: string,
+  ): Promise<SpecialFacilityDetailDto> {
+    return await this.specialFacilityService.getDetail(businessId);
   }
 }

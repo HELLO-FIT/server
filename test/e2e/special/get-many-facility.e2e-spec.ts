@@ -91,4 +91,78 @@ describe('GET /special/facilities - 특수시설 목록 받기', () => {
       },
     ]);
   });
+
+  it('시군구코드 + 종목명 조합으로 현재강좌가 있는 시설목록을 반환한다', async () => {
+    // given
+    await prisma.specialFacility.createMany({
+      data: [
+        {
+          businessId: 'test1',
+          name: 'test1',
+          cityCode: 'test1',
+          cityName: 'test1',
+          localCode: '12345',
+          localName: 'test1',
+          address: 'test1',
+          detailAddress: null,
+        },
+        {
+          businessId: 'test2',
+          name: 'test2',
+          cityCode: 'test2',
+          cityName: 'test2',
+          localCode: '12345',
+          localName: 'test2',
+          address: 'test2',
+          detailAddress: null,
+        },
+      ],
+    });
+
+    await prisma.specialCourse.createMany({
+      data: [
+        {
+          businessId: 'test1',
+          courseId: 'test1',
+          courseName: 'test1',
+          itemName: '태권도',
+          startTime: 'test1',
+          endTime: 'test1',
+          workday: 'test1',
+          price: 10000,
+        },
+        {
+          businessId: 'test2',
+          courseId: 'test2',
+          courseName: 'test2',
+          itemName: '탁구',
+          startTime: 'test2',
+          endTime: 'test2',
+          workday: 'test2',
+          price: 20000,
+        },
+      ],
+    });
+
+    // when
+    const { status, body } = await request(app.getHttpServer()).get(
+      '/special/facilities?localCode=12345&itemName=태권도',
+    );
+
+    // then
+    expect(status).toBe(200);
+    expect(body).toEqual([
+      {
+        businessId: 'test1',
+        name: 'test1',
+        cityCode: 'test1',
+        cityName: 'test1',
+        localCode: '12345',
+        localName: 'test1',
+        address: 'test1',
+        detailAddress: null,
+        items: ['태권도'],
+      },
+    ]);
+  });
 });

@@ -209,6 +209,46 @@ export class FacilityRepository {
 
     return !!favorite;
   }
+
+  async findFavorites(userId: string) {
+    return await this.prisma.normalFavorite.findMany({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  async findManyByUserId(userId: string) {
+    return (await this.prisma.$queryRaw`
+      select
+        a."businessId",
+        a."serialNumber",
+        b."name",
+        b."cityCode",
+        b."cityName",
+        b."localCode",
+        b."localName",
+        b."address",
+        b."detailAddress",
+        b."owner",
+        a."items"
+      from (
+        select distinct
+          f."businessId",
+          f."serialNumber",
+          string_agg(distinct c."itemName", ',') as "items"
+        from "Facility" f join "Course" c
+        on f."businessId" = c."businessId" and f."serialNumber" = c."facilitySerialNumber"
+        where (f."businessId", f."serialNumber") in (
+          select "businessId", "serialNumber"
+          from "NormalFavorite"
+          where "userId" = ${userId}
+        )
+        group by f."businessId", f."serialNumber"
+      ) a join "Facility" b
+        on a."businessId" = b."businessId" and a."serialNumber" = b."serialNumber";
+    `) as FacilitiesInfo[];
+  }
 }
 
 export type FacilitiesInfo = {

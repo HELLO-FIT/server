@@ -8,5 +8,6 @@ import { SpecialCourseModule } from '../course/special-course.module';
   imports: [SpecialCourseModule],
   controllers: [SpecialFacilityController],
   providers: [SpecialFacilityService, SpecialFacilityRepository],
+  exports: [SpecialFacilityRepository],
 })
 export class SpecialFacilityModule {}

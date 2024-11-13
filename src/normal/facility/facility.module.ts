@@ -8,5 +8,6 @@ import { CourseModule } from '../course/course.module';
   imports: [CourseModule],
   controllers: [FacilityController],
   providers: [FacilityService, FacilityRepository],
+  exports: [FacilityRepository],
 })
 export class FacilityModule {}

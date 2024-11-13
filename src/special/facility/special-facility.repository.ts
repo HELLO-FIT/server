@@ -247,6 +247,41 @@ export class SpecialFacilityRepository {
 
     return !!favorite;
   }
+
+  async findFavorites(userId: string) {
+    return await this.prisma.specialFavorite.findMany({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  async findManyByUserId(userId: string) {
+    return (await this.prisma.$queryRaw`
+      select
+        a."businessId",
+        b."name",
+        b."cityCode",
+        b."cityName",
+        b."localCode",
+        b."localName",
+        b."address",
+        b."detailAddress",
+        a."items"
+      from (
+        select
+          f."businessId",
+          string_agg(distinct c."itemName", ',') as "items"
+        from "SpecialFacility" f join "SpecialCourse" c
+        on f."businessId" = c."businessId"
+        where f."businessId" in (
+          select "businessId" from "SpecialFavorite" where "userId" = ${userId}
+        )
+        group by f."businessId" 
+      ) a join "SpecialFacility" b
+      on a."businessId" = b."businessId"
+    `) as SpecialFacilitiesInfo[];
+  }
 }
 
 export type SpecialFacilitiesInfo = {

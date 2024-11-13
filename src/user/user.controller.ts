@@ -1,4 +1,4 @@
-import { Controller, Delete, UseGuards, HttpCode } from '@nestjs/common';
+import { Controller, Delete, UseGuards, HttpCode, Get } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -8,6 +8,7 @@ import {
 import { UserService } from './user.service';
 import { JwtGuard } from 'src/common/guards';
 import { CurrentUser } from 'src/common/decorators';
+import { FavoriteFacilitiesDto } from './dto/response';
 
 @ApiTags('/users')
 @ApiBearerAuth()
@@ -23,5 +24,20 @@ export class UserController {
   @HttpCode(204)
   async deleteUser(@CurrentUser() userId: string) {
     await this.userService.deleteUser(userId);
+  }
+
+  @ApiOperation({ summary: '찜 시설 목록 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '찜 시설 목록 조회 성공',
+    type: FavoriteFacilitiesDto,
+    isArray: true,
+  })
+  @Get('favorites')
+  @UseGuards(JwtGuard)
+  async getFavorites(
+    @CurrentUser() userId: string,
+  ): Promise<FavoriteFacilitiesDto[]> {
+    return await this.userService.getFavorites(userId);
   }
 }

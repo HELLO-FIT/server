@@ -77,6 +77,7 @@ describe('GET /normal/facilities/:businessId/:serialNumber - 시설 상세 정�
       owner: 'test1',
       phone: null,
       items: ['test1'],
+      isFavorite: false,
       courses: [
         {
           courseId: 'test1',

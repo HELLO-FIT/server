@@ -57,11 +57,35 @@ export class FacilityService {
     });
   }
 
-  async getDetail(businessId: string, serialNumber: string) {
-    const [facility, courses] = await Promise.all([
-      this.facilityRepository.findOne(businessId, serialNumber),
-      this.courseRepository.findManyByFacility(businessId, serialNumber),
-    ]);
+  async getDetail({
+    businessId,
+    serialNumber,
+    userId,
+  }: {
+    businessId: string;
+    serialNumber: string;
+    userId: string | null;
+  }) {
+    let facility;
+    let courses;
+    let favorite = false;
+
+    if (userId) {
+      [facility, courses, favorite] = await Promise.all([
+        this.facilityRepository.findOne(businessId, serialNumber),
+        this.courseRepository.findManyByFacility(businessId, serialNumber),
+        this.facilityRepository.isFavorite({
+          businessId,
+          serialNumber,
+          userId,
+        }),
+      ]);
+    } else {
+      [facility, courses] = await Promise.all([
+        this.facilityRepository.findOne(businessId, serialNumber),
+        this.courseRepository.findManyByFacility(businessId, serialNumber),
+      ]);
+    }
 
     const items = new Set(courses.map((course) => course.itemName));
 
@@ -78,6 +102,7 @@ export class FacilityService {
       owner: facility.owner,
       phone: facility.phone,
       items: Array.from(items),
+      isFavorite: favorite,
       courses: courses.map((course) => {
         return {
           courseId: course.courseId,

@@ -187,6 +187,28 @@ export class FacilityRepository {
 
     return;
   }
+
+  async isFavorite({
+    userId,
+    businessId,
+    serialNumber,
+  }: {
+    userId: string;
+    businessId: string;
+    serialNumber: string;
+  }) {
+    const favorite = await this.prisma.normalFavorite.findUnique({
+      where: {
+        userId_businessId_serialNumber: {
+          userId,
+          businessId,
+          serialNumber,
+        },
+      },
+    });
+
+    return !!favorite;
+  }
 }
 
 export type FacilitiesInfo = {

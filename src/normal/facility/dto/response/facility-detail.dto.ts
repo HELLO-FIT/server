@@ -63,6 +63,9 @@ export class FacilityDetail {
   @ApiProperty({ description: '종목명 리스트', type: String, isArray: true })
   items: string[];
 
+  @ApiProperty({ description: '찜 여부' })
+  isFavorite: boolean;
+
   @ApiProperty({
     description: '강좌 리스트',
     type: CourseDetailDto,

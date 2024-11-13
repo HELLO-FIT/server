@@ -27,8 +27,8 @@ import {
   PopularFacilitiesDto,
   FacilityDetail,
 } from './dto/response';
-import { JwtGuard } from 'src/common/guards';
-import { CurrentUser } from 'src/common/decorators';
+import { JwtGuard, JwtOptionalGuard } from 'src/common/guards';
+import { CurrentUser, OptionalCurrentUser } from 'src/common/decorators';
 
 @ApiTags('/normal/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
@@ -106,6 +106,7 @@ export class FacilityController {
   }
 
   @ApiOperation({ summary: '일반시설 상세 정보 받기' })
+  @ApiBearerAuth()
   @ApiParam({
     name: 'businessId',
     description: '사업자 등록 번호',
@@ -121,11 +122,17 @@ export class FacilityController {
     description: '시설 상세 정보 받기 성공',
     type: FacilityDetail,
   })
+  @UseGuards(JwtOptionalGuard)
   @Get(':businessId/:serialNumber')
   async getDetail(
     @Param() { businessId, serialNumber }: GetFacilityDetailDto,
+    @OptionalCurrentUser() userId: string | null,
   ): Promise<FacilityDetail> {
-    return await this.facilityService.getDetail(businessId, serialNumber);
+    return await this.facilityService.getDetail({
+      businessId,
+      serialNumber,
+      userId,
+    });
   }
 
   @ApiOperation({ summary: '일반시설 찜하기 (토글)' })

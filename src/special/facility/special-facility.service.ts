@@ -119,4 +119,10 @@ export class SpecialFacilityService {
       };
     });
   }
+
+  async toggleFavorite(userId: string, businessId: string) {
+    await this.specialFacilityRepository.toggleFavorite(userId, businessId);
+
+    return;
+  }
 }

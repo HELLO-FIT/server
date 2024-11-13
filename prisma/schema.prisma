@@ -10,7 +10,8 @@ datasource db {
 model User {
   id String @id
 
-  NormalFavorite NormalFavorite[]
+  NormalFavorite  NormalFavorite[]
+  SpecialFavorite SpecialFavorite[]
 }
 
 model NormalFavorite {
@@ -26,6 +27,8 @@ model NormalFavorite {
 model SpecialFavorite {
   userId     String
   businessId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, businessId])
 }

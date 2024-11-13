@@ -131,14 +131,14 @@ export class FacilityController {
   @ApiOperation({ summary: '일반시설 찜하기 (토글)' })
   @ApiBearerAuth()
   @ApiParam({
-    name: 'businessId',
-    description: '사업자 등록 번호',
-    example: '1209094142',
-  })
-  @ApiParam({
     name: 'serialNumber',
     description: '시설 일련 번호',
     example: '1',
+  })
+  @ApiParam({
+    name: 'businessId',
+    description: '사업자 등록 번호',
+    example: '1209094142',
   })
   @ApiResponse({
     status: 204,
@@ -151,10 +151,14 @@ export class FacilityController {
   @Put(':businessId/:serialNumber/favorite')
   @HttpCode(204)
   @UseGuards(JwtGuard)
-  async favorite(
+  async toggleFavorite(
     @Param() { businessId, serialNumber }: GetFacilityDetailDto,
     @CurrentUser() userId: string,
   ): Promise<void> {
-    await this.facilityService.favorite({ businessId, serialNumber, userId });
+    await this.facilityService.toggleFavorite({
+      businessId,
+      serialNumber,
+      userId,
+    });
   }
 }

@@ -146,7 +146,7 @@ export class FacilityRepository {
     });
   }
 
-  async favorite({
+  async toggleFavorite({
     userId,
     businessId,
     serialNumber,

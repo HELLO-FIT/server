@@ -93,7 +93,7 @@ export class FacilityService {
     };
   }
 
-  async favorite({
+  async toggleFavorite({
     businessId,
     serialNumber,
     userId,
@@ -102,7 +102,7 @@ export class FacilityService {
     serialNumber: string;
     userId: string;
   }) {
-    await this.facilityRepository.favorite({
+    await this.facilityRepository.toggleFavorite({
       businessId,
       serialNumber,
       userId,

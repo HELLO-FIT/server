@@ -221,6 +221,24 @@ export class SpecialFacilityRepository {
     }
     return facility;
   }
+
+  async toggleFavorite(userId: string, businessId: string) {
+    const favorite = await this.prisma.specialFavorite.findUnique({
+      where: { userId_businessId: { userId, businessId } },
+    });
+
+    if (favorite) {
+      await this.prisma.specialFavorite.delete({
+        where: { userId_businessId: { userId, businessId } },
+      });
+    } else {
+      await this.prisma.specialFavorite.create({
+        data: { userId, businessId },
+      });
+    }
+
+    return;
+  }
 }
 
 export type SpecialFacilitiesInfo = {

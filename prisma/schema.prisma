@@ -9,6 +9,25 @@ datasource db {
 
 model User {
   id String @id
+
+  NormalFavorite NormalFavorite[]
+}
+
+model NormalFavorite {
+  userId       String
+  businessId   String
+  serialNumber String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, businessId, serialNumber])
+}
+
+model SpecialFavorite {
+  userId     String
+  businessId String
+
+  @@id([userId, businessId])
 }
 
 model Facility {

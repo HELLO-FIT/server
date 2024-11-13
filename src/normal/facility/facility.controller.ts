@@ -1,10 +1,20 @@
-import { Controller, Get, Query, HttpException, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  HttpException,
+  Param,
+  UseGuards,
+  Put,
+  HttpCode,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiQuery,
   ApiOperation,
   ApiResponse,
   ApiParam,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { FacilityService } from './facility.service';
 import {
@@ -17,6 +27,8 @@ import {
   PopularFacilitiesDto,
   FacilityDetail,
 } from './dto/response';
+import { JwtGuard } from 'src/common/guards';
+import { CurrentUser } from 'src/common/decorators';
 
 @ApiTags('/normal/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
@@ -114,5 +126,35 @@ export class FacilityController {
     @Param() { businessId, serialNumber }: GetFacilityDetailDto,
   ): Promise<FacilityDetail> {
     return await this.facilityService.getDetail(businessId, serialNumber);
+  }
+
+  @ApiOperation({ summary: '일반시설 찜하기 (토글)' })
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'businessId',
+    description: '사업자 등록 번호',
+    example: '1209094142',
+  })
+  @ApiParam({
+    name: 'serialNumber',
+    description: '시설 일련 번호',
+    example: '1',
+  })
+  @ApiResponse({
+    status: 204,
+    description: '시설 찜하기(토글) 성공',
+  })
+  @ApiResponse({
+    status: 401,
+    description: '로그인 필요',
+  })
+  @Put(':businessId/:serialNumber/favorite')
+  @HttpCode(204)
+  @UseGuards(JwtGuard)
+  async favorite(
+    @Param() { businessId, serialNumber }: GetFacilityDetailDto,
+    @CurrentUser() userId: string,
+  ): Promise<void> {
+    await this.facilityService.favorite({ businessId, serialNumber, userId });
   }
 }

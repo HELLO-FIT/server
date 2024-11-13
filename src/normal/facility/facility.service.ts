@@ -92,4 +92,21 @@ export class FacilityService {
       }),
     };
   }
+
+  async favorite({
+    businessId,
+    serialNumber,
+    userId,
+  }: {
+    businessId: string;
+    serialNumber: string;
+    userId: string;
+  }) {
+    await this.facilityRepository.favorite({
+      businessId,
+      serialNumber,
+      userId,
+    });
+    return;
+  }
 }

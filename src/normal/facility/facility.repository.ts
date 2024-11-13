@@ -145,6 +145,48 @@ export class FacilityRepository {
       },
     });
   }
+
+  async favorite({
+    userId,
+    businessId,
+    serialNumber,
+  }: {
+    userId: string;
+    businessId: string;
+    serialNumber: string;
+  }) {
+    const favorite = await this.prisma.normalFavorite.findUnique({
+      where: {
+        userId_businessId_serialNumber: {
+          userId,
+          businessId,
+          serialNumber,
+        },
+      },
+    });
+
+    if (favorite) {
+      await this.prisma.normalFavorite.delete({
+        where: {
+          userId_businessId_serialNumber: {
+            userId,
+            businessId,
+            serialNumber,
+          },
+        },
+      });
+    } else {
+      await this.prisma.normalFavorite.create({
+        data: {
+          userId,
+          businessId,
+          serialNumber,
+        },
+      });
+    }
+
+    return;
+  }
 }
 
 export type FacilitiesInfo = {

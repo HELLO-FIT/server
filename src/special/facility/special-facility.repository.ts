@@ -248,14 +248,6 @@ export class SpecialFacilityRepository {
     return !!favorite;
   }
 
-  async findFavorites(userId: string) {
-    return await this.prisma.specialFavorite.findMany({
-      where: {
-        userId,
-      },
-    });
-  }
-
   async findManyByUserId(userId: string) {
     return (await this.prisma.$queryRaw`
       select

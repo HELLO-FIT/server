@@ -87,6 +87,7 @@ describe('GET /special/facilities/popular - 인기 특수시설 목록 반환', 
         endTime: 'test1',
         workday: 'test1',
         price: 10000,
+        type: '지체',
       },
     });
 

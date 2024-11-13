@@ -1,4 +1,4 @@
-import { IsString, IsOptional, Length } from 'class-validator';
+import { IsString, IsOptional, Length, IsEnum } from 'class-validator';
 
 export class GetSpecialFacilitiesDto {
   @IsOptional()
@@ -13,4 +13,8 @@ export class GetSpecialFacilitiesDto {
   @IsOptional()
   @IsString()
   facilityName?: string;
+
+  @IsOptional()
+  @IsEnum(['지체', '시각', '청각/언어', '지적/자폐', '뇌병변', '기타'])
+  type?: string;
 }

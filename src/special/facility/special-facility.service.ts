@@ -53,6 +53,13 @@ export class SpecialFacilityService {
     );
   }
 
+  async getManyPopularByLocalCodeAndType(localCode: string, type: string) {
+    return await this.specialFacilityRepository.findManyPopularByLocalCodeAndType(
+      localCode,
+      type,
+    );
+  }
+
   async getDetail(businessId: string) {
     const [facility, courses] = await Promise.all([
       this.specialFacilityRepository.findOne(businessId),
@@ -76,5 +83,40 @@ export class SpecialFacilityService {
         };
       }),
     };
+  }
+
+  async getManyByLocalCodeAndType(localCode: string, type: string) {
+    const facilities =
+      await this.specialFacilityRepository.findManyByLocalCodeAndType(
+        localCode,
+        type,
+      );
+
+    return facilities.map((facility) => {
+      return {
+        ...facility,
+        items: facility.items.split(','),
+      };
+    });
+  }
+
+  async getManyByLocalCodeAndItemNameAndType(
+    localCode: string,
+    itemName: string,
+    type: string,
+  ) {
+    const facilities =
+      await this.specialFacilityRepository.findManyByLocalCodeAndItemNameAndType(
+        localCode,
+        itemName,
+        type,
+      );
+
+    return facilities.map((facility) => {
+      return {
+        ...facility,
+        items: facility.items.split(','),
+      };
+    });
   }
 }

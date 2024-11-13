@@ -25,21 +25,29 @@ export class SpecialFacilityController {
 
   @ApiOperation({ summary: '특수시설 목록 받기' })
   @ApiQuery({
+    name: 'type',
+    description: '장애 유형',
+    required: false,
+    enum: ['지체', '시각', '청각/언어', '지적/자폐', '뇌병변', '기타'],
+    example: '시각',
+  })
+  @ApiQuery({
     name: 'itemName',
-    description:
-      '종목 명 - facilityName이 없는 상황에서 localCode와 조합하여 사용할 수 있음',
+    description: '종목 명',
     required: false,
     example: '탁구',
   })
   @ApiQuery({
     name: 'localCode',
-    description: '5자리 지역코드 - facilityName이 없을 땐 필수값',
+    description:
+      '5자리 지역코드 - facilityName이 없을 땐 필수값이고 itemName, type과 조합하여 사용할 수 있음',
     required: false,
     example: '41460',
   })
   @ApiQuery({
     name: 'facilityName',
-    description: '시설 명 - 시설명이 있으면 localCode, itemName은 무시됩니다',
+    description:
+      '시설 명 - 시설명이 있으면 localCode, itemName, type은 무시됩니다',
     required: false,
     example: '죽전탁구',
   })
@@ -51,32 +59,50 @@ export class SpecialFacilityController {
   })
   @Get()
   async getMany(
-    @Query() { localCode, itemName, facilityName }: GetSpecialFacilitiesDto,
+    @Query()
+    { localCode, itemName, facilityName, type }: GetSpecialFacilitiesDto,
   ): Promise<SpecialFacilitiesDto[]> {
     if (facilityName) {
       return await this.specialFacilityService.getManyByFacilityName(
         facilityName,
       );
-    } else {
-      if (!localCode) {
-        throw new HttpException(
-          'facilityName이 없을땐 localCode는 필수값입니다',
-          400,
-        );
-      }
+    }
+    if (!localCode) {
+      throw new HttpException(
+        'facilityName이 없을땐 localCode는 필수값입니다',
+        400,
+      );
+    }
 
-      if (itemName) {
-        return await this.specialFacilityService.getManyByLocalCodeAndItemName(
+    if (itemName) {
+      if (type) {
+        return await this.specialFacilityService.getManyByLocalCodeAndItemNameAndType(
           localCode,
           itemName,
+          type,
         );
-      } else {
-        return await this.specialFacilityService.getManyByLocalCode(localCode);
       }
+      return await this.specialFacilityService.getManyByLocalCodeAndItemName(
+        localCode,
+        itemName,
+      );
     }
+    if (type) {
+      return await this.specialFacilityService.getManyByLocalCodeAndType(
+        localCode,
+        type,
+      );
+    }
+    return await this.specialFacilityService.getManyByLocalCode(localCode);
   }
 
   @ApiOperation({ summary: '특수 인기시설 목록 받기' })
+  @ApiQuery({
+    name: 'type',
+    description: '장애 유형',
+    required: false,
+    enum: ['지체', '시각', '청각/언어', '지적/자폐', '뇌병변', '기타'],
+  })
   @ApiQuery({
     name: 'localCode',
     description: '5자리 지역코드',
@@ -90,8 +116,14 @@ export class SpecialFacilityController {
   })
   @Get('popular')
   async getManyPopularByLocalCode(
-    @Query() { localCode }: GetPopularSpecialFacilitiesDto,
+    @Query() { localCode, type }: GetPopularSpecialFacilitiesDto,
   ): Promise<PopularSpecialFacilitiesDto[]> {
+    if (type) {
+      return await this.specialFacilityService.getManyPopularByLocalCodeAndType(
+        localCode,
+        type,
+      );
+    }
     return await this.specialFacilityService.getManyPopularByLocalCode(
       localCode,
     );

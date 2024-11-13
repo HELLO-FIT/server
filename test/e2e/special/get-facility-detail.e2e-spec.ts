@@ -59,6 +59,7 @@ describe('GET /special/facilities/:businessId - 특수시설 상세 정보 받�
         endTime: 'test1',
         workday: 'test1',
         price: 10000,
+        type: '지체',
       },
     });
 

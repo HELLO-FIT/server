@@ -67,6 +67,7 @@ describe('GET /special/facilities - 특수시설 목록 받기', () => {
         endTime: 'test1',
         workday: 'test1',
         price: 10000,
+        type: '지체',
       },
     });
 
@@ -130,6 +131,7 @@ describe('GET /special/facilities - 특수시설 목록 받기', () => {
           endTime: 'test1',
           workday: 'test1',
           price: 10000,
+          type: '지체',
         },
         {
           businessId: 'test2',
@@ -140,6 +142,7 @@ describe('GET /special/facilities - 특수시설 목록 받기', () => {
           endTime: 'test2',
           workday: 'test2',
           price: 20000,
+          type: '지체',
         },
       ],
     });
@@ -203,6 +206,7 @@ describe('GET /special/facilities - 특수시설 목록 받기', () => {
         endTime: 'test1',
         workday: 'test1',
         price: 10000,
+        type: '지체',
       },
     });
 
@@ -226,5 +230,13 @@ describe('GET /special/facilities - 특수시설 목록 받기', () => {
         items: ['test1'],
       },
     ]);
+  });
+
+  it('type이 있을 땐 허용된 type이 아니면 400에러를 반환한다', async () => {
+    const { status } = await request(app.getHttpServer()).get(
+      '/special/facilities?localCode=12345&type=테스트',
+    );
+
+    expect(status).toBe(400);
   });
 });

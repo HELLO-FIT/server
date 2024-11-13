@@ -239,6 +239,14 @@ export class SpecialFacilityRepository {
 
     return;
   }
+
+  async isFavorite(userId: string, businessId: string) {
+    const favorite = await this.prisma.specialFavorite.findUnique({
+      where: { userId_businessId: { userId, businessId } },
+    });
+
+    return !!favorite;
+  }
 }
 
 export type SpecialFacilitiesInfo = {

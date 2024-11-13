@@ -81,6 +81,7 @@ describe('GET /special/facilities/:businessId - 특수시설 상세 정보 받�
       detailAddress: null,
       phone: null,
       items: ['test1'],
+      isFavorite: false,
       courses: [
         {
           courseId: 'test1',

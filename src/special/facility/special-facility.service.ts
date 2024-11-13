@@ -60,17 +60,30 @@ export class SpecialFacilityService {
     );
   }
 
-  async getDetail(businessId: string) {
-    const [facility, courses] = await Promise.all([
-      this.specialFacilityRepository.findOne(businessId),
-      this.specialCourseRepository.findManyByFacility(businessId),
-    ]);
+  async getDetail(businessId: string, userId: string | null) {
+    let facility;
+    let courses;
+    let favorite = false;
+
+    if (userId) {
+      [facility, courses, favorite] = await Promise.all([
+        this.specialFacilityRepository.findOne(businessId),
+        this.specialCourseRepository.findManyByFacility(businessId),
+        this.specialFacilityRepository.isFavorite(userId, businessId),
+      ]);
+    } else {
+      [facility, courses] = await Promise.all([
+        this.specialFacilityRepository.findOne(businessId),
+        this.specialCourseRepository.findManyByFacility(businessId),
+      ]);
+    }
 
     const items = new Set(courses.map((course) => course.itemName));
 
     return {
       ...facility,
       items: Array.from(items),
+      isFavorite: favorite,
       courses: courses.map((course) => {
         return {
           courseId: course.courseId,

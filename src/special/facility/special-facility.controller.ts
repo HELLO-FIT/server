@@ -26,8 +26,8 @@ import {
   PopularSpecialFacilitiesDto,
   SpecialFacilityDetailDto,
 } from './dto/response';
-import { JwtGuard } from 'src/common/guards';
-import { CurrentUser } from 'src/common/decorators';
+import { JwtGuard, JwtOptionalGuard } from 'src/common/guards';
+import { CurrentUser, OptionalCurrentUser } from 'src/common/decorators';
 
 @ApiTags('/special/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
@@ -142,6 +142,7 @@ export class SpecialFacilityController {
   }
 
   @ApiOperation({ summary: '특수시설 상세 정보 받기' })
+  @ApiBearerAuth()
   @ApiParam({
     name: 'businessId',
     description: '사업자 등록 번호',
@@ -153,10 +154,12 @@ export class SpecialFacilityController {
     type: SpecialFacilityDetailDto,
   })
   @Get(':businessId')
+  @UseGuards(JwtOptionalGuard)
   async getDetail(
     @Param('businessId') businessId: string,
+    @OptionalCurrentUser() userId: string | null,
   ): Promise<SpecialFacilityDetailDto> {
-    return await this.specialFacilityService.getDetail(businessId);
+    return await this.specialFacilityService.getDetail(businessId, userId);
   }
 
   @ApiOperation({ summary: '특수시설 찜하기(토글)' })

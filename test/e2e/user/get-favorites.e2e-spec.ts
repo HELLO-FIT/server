@@ -170,4 +170,122 @@ describe('GET /users/favorites - 찜한 시설 목록 조회', () => {
       },
     ]);
   });
+
+  it('찜한 시설이 여러개면 시간순으로 정렬한다', async () => {
+    // given
+    const accessToken = await register(app);
+
+    await prisma.facility.createMany({
+      data: [
+        {
+          businessId: 'test1',
+          serialNumber: 'test1',
+          name: 'test1',
+          cityCode: 'test1',
+          cityName: 'test1',
+          localCode: '12345',
+          localName: 'test1',
+          address: 'test1',
+          detailAddress: null,
+          owner: 'test1',
+        },
+        {
+          businessId: 'test2',
+          serialNumber: 'test2',
+          name: 'test2',
+          cityCode: 'test2',
+          cityName: 'test2',
+          localCode: '12345',
+          localName: 'test2',
+          address: 'test2',
+          detailAddress: null,
+          owner: 'test2',
+        },
+      ],
+    });
+
+    await prisma.course.createMany({
+      data: [
+        {
+          businessId: 'test1',
+          facilitySerialNumber: 'test1',
+          courseId: 'test1',
+          courseName: 'test1',
+          itemCode: 'test1',
+          itemName: 'test1',
+          instructor: 'test1',
+          startTime: 'test1',
+          endTime: 'test1',
+          workday: 'test1',
+          price: 10000,
+        },
+        {
+          businessId: 'test2',
+          facilitySerialNumber: 'test2',
+          courseId: 'test2',
+          courseName: 'test2',
+          itemCode: 'test2',
+          itemName: 'test2',
+          instructor: 'test2',
+          startTime: 'test2',
+          endTime: 'test2',
+          workday: 'test2',
+          price: 10000,
+        },
+      ],
+    });
+
+    await prisma.normalFavorite.createMany({
+      data: [
+        {
+          userId: 'kakaoId',
+          businessId: 'test1',
+          serialNumber: 'test1',
+          createdAt: new Date('2021-01-01'),
+        },
+        {
+          userId: 'kakaoId',
+          businessId: 'test2',
+          serialNumber: 'test2',
+          createdAt: new Date('2021-01-02'),
+        },
+      ],
+    });
+
+    // when
+    const { status, body } = await request(app.getHttpServer())
+      .get('/users/favorites')
+      .set('Authorization', `Bearer ${accessToken}`);
+
+    // then
+    expect(status).toBe(200);
+    expect(body).toEqual([
+      {
+        businessId: 'test1',
+        serialNumber: 'test1',
+        name: 'test1',
+        cityCode: 'test1',
+        cityName: 'test1',
+        localCode: '12345',
+        localName: 'test1',
+        address: 'test1',
+        detailAddress: null,
+        owner: 'test1',
+        items: ['test1'],
+      },
+      {
+        businessId: 'test2',
+        serialNumber: 'test2',
+        name: 'test2',
+        cityCode: 'test2',
+        cityName: 'test2',
+        localCode: '12345',
+        localName: 'test2',
+        address: 'test2',
+        detailAddress: null,
+        owner: 'test2',
+        items: ['test2'],
+      },
+    ]);
+  });
 });

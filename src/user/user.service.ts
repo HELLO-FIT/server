@@ -22,19 +22,16 @@ export class UserService {
       this.specialFacilityRepository.findManyByUserId(userId),
     ]);
 
-    return [
-      ...normalFacilities.map((facility) => {
-        return {
-          ...facility,
-          items: facility.items.split(','),
-        };
-      }),
-      ...specialFacilities.map((facility) => {
-        return {
-          ...facility,
-          items: facility.items.split(','),
-        };
-      }),
-    ];
+    const allFacilities = [...normalFacilities, ...specialFacilities];
+
+    // createdAt asc
+    const sortedFacilities = allFacilities.sort((a, b) => {
+      return a.createdAt.getTime() - b.createdAt.getTime();
+    });
+
+    return sortedFacilities.map(({ createdAt: _, ...rest }) => ({
+      ...rest,
+      items: rest.items.split(','),
+    }));
   }
 }

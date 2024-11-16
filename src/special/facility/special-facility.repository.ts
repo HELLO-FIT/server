@@ -250,6 +250,9 @@ export class SpecialFacilityRepository {
 
   async findManyByUserId(userId: string) {
     return (await this.prisma.$queryRaw`
+      with "FavoriteFacility" as (
+        select * from "SpecialFavorite" where "userId" = ${userId}
+      )
       select
         a."businessId",
         b."name",
@@ -259,7 +262,8 @@ export class SpecialFacilityRepository {
         b."localName",
         b."address",
         b."detailAddress",
-        a."items"
+        a."items",
+        c."createdAt"
       from (
         select
           f."businessId",
@@ -267,11 +271,13 @@ export class SpecialFacilityRepository {
         from "SpecialFacility" f join "SpecialCourse" c
         on f."businessId" = c."businessId"
         where f."businessId" in (
-          select "businessId" from "SpecialFavorite" where "userId" = ${userId}
+          select "businessId" from "FavoriteFacility"
         )
         group by f."businessId" 
       ) a join "SpecialFacility" b
       on a."businessId" = b."businessId"
+      join "FavoriteFacility" c
+      on a."businessId" = c."businessId";
     `) as SpecialFacilitiesInfo[];
   }
 }
@@ -286,6 +292,7 @@ export type SpecialFacilitiesInfo = {
   address: string;
   detailAddress: string | null;
   items: string;
+  createdAt: Date;
 };
 
 export type PopularSpecialFacilitiesInfo = {

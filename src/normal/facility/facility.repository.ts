@@ -212,6 +212,9 @@ export class FacilityRepository {
 
   async findManyByUserId(userId: string) {
     return (await this.prisma.$queryRaw`
+      with "FavoriteFacility" as (
+        select * from "NormalFavorite" where "userId" = ${userId}
+      )
       select
         a."businessId",
         a."serialNumber",
@@ -223,7 +226,8 @@ export class FacilityRepository {
         b."address",
         b."detailAddress",
         b."owner",
-        a."items"
+        a."items",
+        c."createdAt"
       from (
         select distinct
           f."businessId",
@@ -231,14 +235,13 @@ export class FacilityRepository {
           string_agg(distinct c."itemName", ',') as "items"
         from "Facility" f join "Course" c
         on f."businessId" = c."businessId" and f."serialNumber" = c."facilitySerialNumber"
-        where (f."businessId", f."serialNumber") in (
-          select "businessId", "serialNumber"
-          from "NormalFavorite"
-          where "userId" = ${userId}
-        )
+        where (f."businessId", f."serialNumber") in (select "businessId", "serialNumber" from "FavoriteFacility")
         group by f."businessId", f."serialNumber"
-      ) a join "Facility" b
-        on a."businessId" = b."businessId" and a."serialNumber" = b."serialNumber";
+      ) a 
+      join "Facility" b
+        on a."businessId" = b."businessId" and a."serialNumber" = b."serialNumber"
+      join "FavoriteFacility" c
+        on a."businessId" = c."businessId" and a."serialNumber" = c."serialNumber";
     `) as FacilitiesInfo[];
   }
 }
@@ -255,4 +258,5 @@ export type FacilitiesInfo = {
   detailAddress: string | null;
   owner: string;
   items: string;
+  createdAt: Date;
 };

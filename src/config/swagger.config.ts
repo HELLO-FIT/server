@@ -6,7 +6,6 @@ export function setupSwagger(app: INestApplication) {
     .setDescription('HELLOFIT API description')
     .setVersion('1.0')
     .addBearerAuth()
-    .addTag('HELLOFIT')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

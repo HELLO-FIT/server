@@ -52,6 +52,20 @@ describe('PUT /normal/facilities/:businessId/:serialNumber/favorite - 시설 찜
     const businessId = 'test1';
     const serialNumber = 'test1';
 
+    await prisma.facility.create({
+      data: {
+        businessId,
+        serialNumber,
+        name: 'test',
+        cityCode: 'test',
+        cityName: 'test',
+        localCode: 'test',
+        localName: 'test',
+        address: 'test',
+        owner: 'test',
+      },
+    });
+
     // when
     const response = await request(app.getHttpServer())
       .put(`/normal/facilities/${businessId}/${serialNumber}/favorite`)

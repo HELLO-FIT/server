@@ -207,6 +207,7 @@ export class FacilityRepository {
           },
         },
       });
+      return false;
     } else {
       await this.prisma.normalFavorite.create({
         data: {
@@ -215,9 +216,8 @@ export class FacilityRepository {
           serialNumber,
         },
       });
+      return true;
     }
-
-    return;
   }
 
   async isFavorite({

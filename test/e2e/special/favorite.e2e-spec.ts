@@ -50,6 +50,18 @@ describe('PUT /special/facilities/:businessId/favorite - 특수시설 찜 토글
 
     const businessId = 'test1';
 
+    await prisma.specialFacility.create({
+      data: {
+        businessId,
+        name: 'test',
+        cityCode: 'test',
+        cityName: 'test',
+        localCode: 'test',
+        localName: 'test',
+        address: 'test',
+      },
+    });
+
     // when
     const response = await request(app.getHttpServer())
       .put(`/special/facilities/${businessId}/favorite`)
@@ -69,6 +81,19 @@ describe('PUT /special/facilities/:businessId/favorite - 특수시설 찜 토글
     const accessToken = await register(app);
 
     const businessId = 'test1';
+
+    await prisma.specialFacility.create({
+      data: {
+        businessId,
+        name: 'test',
+        cityCode: 'test',
+        cityName: 'test',
+        localCode: 'test',
+        localName: 'test',
+        address: 'test',
+      },
+    });
+
     await prisma.specialFavorite.create({
       data: { userId: 'kakaoId', businessId },
     });

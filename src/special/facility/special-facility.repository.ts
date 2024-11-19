@@ -322,13 +322,13 @@ export class SpecialFacilityRepository {
       await this.prisma.specialFavorite.delete({
         where: { userId_businessId: { userId, businessId } },
       });
+      return false;
     } else {
       await this.prisma.specialFavorite.create({
         data: { userId, businessId },
       });
+      return true;
     }
-
-    return;
   }
 
   async isFavorite(userId: string, businessId: string) {

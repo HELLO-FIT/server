@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { FacilityRepository } from './facility.repository';
 import { CourseRepository } from '../course/course.repository';
+import { NotificationRepository } from 'src/notifications/notification.repository';
 
 @Injectable()
 export class FacilityService {
   constructor(
     private facilityRepository: FacilityRepository,
     private courseRepository: CourseRepository,
+    private notificationRepository: NotificationRepository,
   ) {}
 
   async getManyByLocalCode(localCode: string) {
@@ -145,11 +147,35 @@ export class FacilityService {
     serialNumber: string;
     userId: string;
   }) {
-    await this.facilityRepository.toggleFavorite({
+    const result = await this.facilityRepository.toggleFavorite({
       businessId,
       serialNumber,
       userId,
     });
+    if (result) {
+      const [facility, courses] = await Promise.all([
+        this.facilityRepository.findOne(businessId, serialNumber),
+        this.courseRepository.findManyByFacility(businessId, serialNumber),
+      ]);
+
+      const notification =
+        await this.notificationRepository.findOneByBusinessIdAndSerialNumber(
+          userId,
+          businessId,
+          serialNumber,
+        );
+
+      if (notification) {
+        await this.notificationRepository.delete(notification.id);
+      }
+      await this.notificationRepository.create({
+        userId,
+        businessId,
+        serialNumber,
+        facilityName: facility.name,
+        courseNames: courses.map((course) => course.courseName),
+      });
+    }
     return;
   }
 }

@@ -134,7 +134,7 @@ export class SpecialFacilityRepository {
     `) as SpecialFacilitiesInfo[];
   }
 
-  async findManyPopularByLocalCode(localCode: string) {
+  async findManyPopular(localCode: string) {
     const data = (await this.prisma.$queryRaw`
       select
         a."businessId",
@@ -173,7 +173,48 @@ export class SpecialFacilityRepository {
     });
   }
 
-  async findManyPopularByLocalCodeAndType(localCode: string, type: string) {
+  async findManyPopularByType(localCode: string, type: string) {
+    const data = (await this.prisma.$queryRaw`
+      select
+        a."businessId",
+        b."name",
+        b."cityCode",
+        b."cityName",
+        b."localCode",
+        b."localName",
+        b."address",
+        b."detailAddress",
+        a."totalParticipantCount",
+        a."items"
+      from (
+        select
+          f."businessId",
+          sum(ch."participantCount") as "totalParticipantCount",
+          string_agg(distinct c."itemName", ',') as "items",
+          string_agg(distinct c."type", ',') as "types"
+        from "SpecialFacility" f
+          join "SpecialCourse" c
+            on f."businessId" = c."businessId"
+          join "SpecialCourseHistory" ch
+            on f."businessId" = ch."businessId" and c."courseId" = ch."courseId"
+        where f."localCode" = ${localCode}
+        group by f."businessId"
+      ) a join "SpecialFacility" b
+        on a."businessId" = b."businessId"
+      where a."types" like ${`%${type}%`}
+      order by a."totalParticipantCount" desc
+    `) as PopularSpecialFacilitiesInfo[];
+
+    return data.map((facility) => {
+      return {
+        ...facility,
+        totalParticipantCount: Number(facility.totalParticipantCount),
+        items: facility.items.split(','),
+      };
+    });
+  }
+
+  async findManyPopularByItemName(localCode: string, itemName: string) {
     const data = (await this.prisma.$queryRaw`
       select
         a."businessId",
@@ -196,10 +237,60 @@ export class SpecialFacilityRepository {
             on f."businessId" = c."businessId"
           join "SpecialCourseHistory" ch
             on f."businessId" = ch."businessId" and c."courseId" = ch."courseId"
-        where f."localCode" = ${localCode} and c."type" = ${type}
+        where f."localCode" = ${localCode}
         group by f."businessId"
       ) a join "SpecialFacility" b
         on a."businessId" = b."businessId"
+      where a."items" like ${`%${itemName}%`}
+      order by a."totalParticipantCount" desc
+    `) as PopularSpecialFacilitiesInfo[];
+
+    return data.map((facility) => {
+      return {
+        ...facility,
+        totalParticipantCount: Number(facility.totalParticipantCount),
+        items: facility.items.split(','),
+      };
+    });
+  }
+
+  async findManyPopularByItemNameAndType({
+    localCode,
+    itemName,
+    type,
+  }: {
+    localCode: string;
+    itemName: string;
+    type: string;
+  }) {
+    const data = (await this.prisma.$queryRaw`
+      select
+        a."businessId",
+        b."name",
+        b."cityCode",
+        b."cityName",
+        b."localCode",
+        b."localName",
+        b."address",
+        b."detailAddress",
+        a."totalParticipantCount",
+        a."items"
+      from (
+        select
+          f."businessId",
+          sum(ch."participantCount") as "totalParticipantCount",
+          string_agg(distinct c."itemName", ',') as "items",
+          string_agg(distinct c."type", ',') as "types"
+        from "SpecialFacility" f
+          join "SpecialCourse" c
+            on f."businessId" = c."businessId"
+          join "SpecialCourseHistory" ch
+            on f."businessId" = ch."businessId" and c."courseId" = ch."courseId"
+        where f."localCode" = ${localCode}
+        group by f."businessId"
+      ) a join "SpecialFacility" b
+        on a."businessId" = b."businessId"
+      where a."items" like ${`%${itemName}%`} and a."types" like ${`%${type}%`}
       order by a."totalParticipantCount" desc
     `) as PopularSpecialFacilitiesInfo[];
 

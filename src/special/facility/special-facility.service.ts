@@ -47,16 +47,39 @@ export class SpecialFacilityService {
     });
   }
 
-  async getManyPopularByLocalCode(localCode: string) {
-    return await this.specialFacilityRepository.findManyPopularByLocalCode(
+  async getManyPopular(localCode: string) {
+    return await this.specialFacilityRepository.findManyPopular(localCode);
+  }
+
+  async getManyPopularByType(localCode: string, type: string) {
+    return await this.specialFacilityRepository.findManyPopularByType(
       localCode,
+      type,
     );
   }
 
-  async getManyPopularByLocalCodeAndType(localCode: string, type: string) {
-    return await this.specialFacilityRepository.findManyPopularByLocalCodeAndType(
+  async getManyPopularByItemName(localCode: string, itemName: string) {
+    return await this.specialFacilityRepository.findManyPopularByItemName(
       localCode,
-      type,
+      itemName,
+    );
+  }
+
+  async getManyPopularByItemNameAndType({
+    localCode,
+    itemName,
+    type,
+  }: {
+    localCode: string;
+    itemName: string;
+    type: string;
+  }) {
+    return await this.specialFacilityRepository.findManyPopularByItemNameAndType(
+      {
+        localCode,
+        itemName,
+        type,
+      },
     );
   }
 

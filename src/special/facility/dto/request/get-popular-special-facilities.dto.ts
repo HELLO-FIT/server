@@ -8,4 +8,8 @@ export class GetPopularSpecialFacilitiesDto {
   @IsOptional()
   @IsEnum(['지체', '시각', '청각/언어', '지적/자폐', '뇌병변', '기타'])
   type?: string;
+
+  @IsOptional()
+  @IsString()
+  itemName?: string;
 }

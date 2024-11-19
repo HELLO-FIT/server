@@ -116,6 +116,12 @@ export class SpecialFacilityController {
     enum: ['지체', '시각', '청각/언어', '지적/자폐', '뇌병변', '기타'],
   })
   @ApiQuery({
+    name: 'itemName',
+    description: '종목 명',
+    example: '헬스',
+    required: false,
+  })
+  @ApiQuery({
     name: 'localCode',
     description: '5자리 지역코드',
     example: '11680',
@@ -128,17 +134,26 @@ export class SpecialFacilityController {
   })
   @Get('popular')
   async getManyPopularByLocalCode(
-    @Query() { localCode, type }: GetPopularSpecialFacilitiesDto,
+    @Query() { localCode, type, itemName }: GetPopularSpecialFacilitiesDto,
   ): Promise<PopularSpecialFacilitiesDto[]> {
     if (type) {
-      return await this.specialFacilityService.getManyPopularByLocalCodeAndType(
+      if (itemName) {
+        return await this.specialFacilityService.getManyPopularByItemNameAndType(
+          { localCode, itemName, type },
+        );
+      }
+      return await this.specialFacilityService.getManyPopularByType(
         localCode,
         type,
       );
     }
-    return await this.specialFacilityService.getManyPopularByLocalCode(
-      localCode,
-    );
+    if (itemName) {
+      return await this.specialFacilityService.getManyPopularByItemName(
+        localCode,
+        itemName,
+      );
+    }
+    return await this.specialFacilityService.getManyPopular(localCode);
   }
 
   @ApiOperation({ summary: '특수시설 상세 정보 받기' })

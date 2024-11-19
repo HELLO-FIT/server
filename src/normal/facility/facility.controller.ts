@@ -88,6 +88,12 @@ export class FacilityController {
 
   @ApiOperation({ summary: '일반 인기시설 목록 받기' })
   @ApiQuery({
+    name: 'itemName',
+    description: '종목 명',
+    example: '무용(발레 등)',
+    required: false,
+  })
+  @ApiQuery({
     name: 'localCode',
     description: '5자리 지역코드',
     example: '11680',
@@ -100,8 +106,14 @@ export class FacilityController {
   })
   @Get('popular')
   async getManyPopularByLocalCode(
-    @Query() { localCode }: GetPopularFacilitiesDto,
+    @Query() { localCode, itemName }: GetPopularFacilitiesDto,
   ): Promise<PopularFacilitiesDto[]> {
+    if (itemName) {
+      return await this.facilityService.getManyPopularByLocalCodeAndItemName(
+        localCode,
+        itemName,
+      );
+    }
     return await this.facilityService.getManyPopularByLocalCode(localCode);
   }
 

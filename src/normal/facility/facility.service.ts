@@ -57,6 +57,24 @@ export class FacilityService {
     });
   }
 
+  async getManyPopularByLocalCodeAndItemName(
+    localCode: string,
+    itemName: string,
+  ) {
+    const facilities =
+      await this.facilityRepository.findManyPopularByLocalCodeAndItemName(
+        localCode,
+        itemName,
+      );
+
+    return facilities.map((facility) => {
+      return {
+        ...facility,
+        items: facility.items.split(','),
+      };
+    });
+  }
+
   async getDetail({
     businessId,
     serialNumber,

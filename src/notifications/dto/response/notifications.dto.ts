@@ -7,7 +7,11 @@ export class NotificationsDto {
   @ApiProperty()
   businessId: string;
 
-  @ApiProperty({ description: '시설 일련번호', nullable: false, type: String })
+  @ApiProperty({
+    description: '시설 일련번호 - 없으면 특수시설',
+    nullable: false,
+    type: String,
+  })
   serialNumber: string | null;
 
   @ApiProperty()

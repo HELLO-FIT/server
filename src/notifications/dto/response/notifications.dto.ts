@@ -18,4 +18,7 @@ export class NotificationsDto {
 
   @ApiProperty()
   createdAt: Date;
+
+  @ApiProperty({ description: '확인 여부' })
+  isViewed: boolean;
 }

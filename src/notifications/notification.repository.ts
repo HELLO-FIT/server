@@ -67,11 +67,24 @@ export class NotificationRepository {
         facilityName: true,
         courseNames: true,
         createdAt: true,
+        isViewed: true,
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
+  }
+
+  async readNotification(userId: string, notificationId: string) {
+    await this.prisma.notification.update({
+      where: {
+        id: notificationId,
+      },
+      data: {
+        isViewed: true,
+      },
+    });
+    return;
   }
 }
 

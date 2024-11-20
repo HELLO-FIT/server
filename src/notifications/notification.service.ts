@@ -8,4 +8,9 @@ export class NotificationService {
   async getNotifications(userId: string) {
     return await this.notificationRepository.findMany(userId);
   }
+
+  async readNotification(userId: string, notificationId: string) {
+    await this.notificationRepository.readNotification(userId, notificationId);
+    return;
+  }
 }

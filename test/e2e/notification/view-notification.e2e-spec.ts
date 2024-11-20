@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { register } from 'test/e2e/helper';
 import { AuthService } from 'src/auth/auth.service';
 
-describe('GET /notifications - 알림 목록 조회', () => {
+describe('PUT /notifications/:id - 알림 확인', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let authService: AuthService;
@@ -35,13 +35,15 @@ describe('GET /notifications - 알림 목록 조회', () => {
 
   it('토큰이 없으면 401을 반환한다', async () => {
     // when
-    const response = await request(app.getHttpServer()).get('/notifications');
+    const response = await request(app.getHttpServer()).put(
+      '/notifications/test1',
+    );
 
     // then
     expect(response.status).toBe(401);
   });
 
-  it('200과 함께 알림 목록을 반환한다', async () => {
+  it('204와 함께 isViewed가 true로 변경된다', async () => {
     // given
     const accessToken = await register(app);
 
@@ -95,22 +97,15 @@ describe('GET /notifications - 알림 목록 조회', () => {
     });
 
     // when
-    const { status, body } = await request(app.getHttpServer())
-      .get('/notifications')
+    const { status } = await request(app.getHttpServer())
+      .put(`/notifications/${notification.id}`)
       .set('Authorization', `Bearer ${accessToken}`);
 
     // then
-    expect(status).toBe(200);
-    expect(body).toEqual([
-      {
-        id: notification.id,
-        businessId: 'test1',
-        serialNumber: 'test1',
-        facilityName: 'test1',
-        courseNames: ['test1'],
-        createdAt: expect.any(String),
-        isViewed: false,
-      },
-    ]);
+    expect(status).toBe(204);
+    const updatedNotification = await prisma.notification.findUnique({
+      where: { id: notification.id },
+    });
+    expect(updatedNotification!.isViewed).toBe(true);
   });
 });

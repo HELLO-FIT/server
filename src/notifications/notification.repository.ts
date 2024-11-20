@@ -54,6 +54,25 @@ export class NotificationRepository {
       },
     });
   }
+
+  async findMany(userId: string) {
+    return await this.prisma.notification.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        businessId: true,
+        serialNumber: true,
+        facilityName: true,
+        courseNames: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
 }
 
 export type CreateInput = {

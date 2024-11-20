@@ -36,7 +36,6 @@ describe('GET /users/favorites - 찜한 시설 목록 조회', () => {
   });
 
   it('토큰이 없으면 401을 반환한다', async () => {
-    // given
     // when
     const response = await request(app.getHttpServer()).get('/users/favorites');
 

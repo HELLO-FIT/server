@@ -9,8 +9,13 @@ export class NotificationService {
     return await this.notificationRepository.findMany(userId);
   }
 
-  async readNotification(userId: string, notificationId: string) {
-    await this.notificationRepository.readNotification(userId, notificationId);
+  async readNotification(notificationId: string) {
+    await this.notificationRepository.readNotification(notificationId);
+    return;
+  }
+
+  async deleteNotification(notificationId: string) {
+    await this.notificationRepository.deleteOne(notificationId);
     return;
   }
 }

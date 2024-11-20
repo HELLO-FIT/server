@@ -75,13 +75,22 @@ export class NotificationRepository {
     });
   }
 
-  async readNotification(userId: string, notificationId: string) {
+  async readNotification(notificationId: string) {
     await this.prisma.notification.update({
       where: {
         id: notificationId,
       },
       data: {
         isViewed: true,
+      },
+    });
+    return;
+  }
+
+  async deleteOne(notificationId: string) {
+    await this.prisma.notification.delete({
+      where: {
+        id: notificationId,
       },
     });
     return;

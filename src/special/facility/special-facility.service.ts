@@ -104,10 +104,12 @@ export class SpecialFacilityService {
     }
 
     const items = new Set(courses.map((course) => course.itemName));
+    const types = new Set(courses.map((course) => course.type));
 
     return {
       ...facility,
       items: Array.from(items),
+      types: Array.from(types),
       isFavorite: favorite,
       courses: courses.map((course) => {
         return {

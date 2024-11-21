@@ -54,6 +54,9 @@ export class SpecialFacilityDetailDto {
   @ApiProperty({ description: '종목명 리스트', type: String, isArray: true })
   items: string[];
 
+  @ApiProperty({ description: '장애 유형 리스트', type: String, isArray: true })
+  types: string[];
+
   @ApiProperty({ description: '찜 여부' })
   isFavorite: boolean;
 

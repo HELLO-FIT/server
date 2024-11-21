@@ -80,8 +80,9 @@ describe('GET /special/facilities/:businessId - 특수시설 상세 정보 받�
       address: 'test1',
       detailAddress: null,
       phone: null,
-      items: ['test1'],
       isFavorite: false,
+      items: ['test1'],
+      types: ['지체'],
       courses: [
         {
           courseId: 'test1',

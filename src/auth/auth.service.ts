@@ -11,10 +11,10 @@ export class AuthService {
   ) {}
 
   async login(kakaoAccessToken: string) {
-    const kakaoId = await this.getKakaoProfile(kakaoAccessToken);
-    let user = await this.userRepository.findUserById(kakaoId);
+    const profile = await this.getKakaoProfile(kakaoAccessToken);
+    let user = await this.userRepository.findUserById(profile.kakaoId);
     if (!user) {
-      user = await this.userRepository.createUser(kakaoId);
+      user = await this.userRepository.createUser(profile);
     }
 
     const accessToken = this.createAccessToken(user.id);
@@ -27,12 +27,31 @@ export class AuthService {
         Authorization: `Bearer ${kakaoAccessToken}`,
       },
     });
-    const data = await result.json();
+    const data = (await result.json()) as {
+      id: number;
+      connected_at: string;
+      kakao_account: {
+        profile_nickname_needs_agreement: boolean;
+        profile: {
+          nickname: string;
+        };
+        has_email: boolean;
+        email_needs_agreement: boolean;
+        is_email_valid: boolean;
+        is_email_verified: boolean;
+        email: string;
+      };
+    };
 
-    if (result.status !== 200 || !data.id) {
+    if (result.status !== 200 || !data.id || !data.kakao_account.email) {
       throw new HttpException('Invalid access token', 401);
     }
-    return String(data.id);
+    console.log(data);
+    return {
+      kakaoId: data.id.toString(),
+      email: data.kakao_account.email,
+      nickname: data.kakao_account.profile.nickname,
+    };
   }
 
   createAccessToken(id: string) {

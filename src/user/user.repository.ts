@@ -11,10 +11,20 @@ export class UserRepository {
     });
   }
 
-  async createUser(id: string) {
+  async createUser({
+    kakaoId,
+    email,
+    nickname,
+  }: {
+    kakaoId: string;
+    email: string;
+    nickname: string;
+  }) {
     return this.prisma.user.create({
       data: {
-        id,
+        id: kakaoId,
+        email,
+        nickname,
       },
     });
   }

@@ -20,7 +20,11 @@ describe('PUT /notifications/:id - 알림 확인', () => {
     prisma = module.get<PrismaService>(PrismaService);
     authService = module.get<AuthService>(AuthService);
 
-    jest.spyOn(authService, 'getKakaoProfile').mockResolvedValue('kakaoId');
+    jest.spyOn(authService, 'getKakaoProfile').mockResolvedValue({
+      kakaoId: 'kakaoId',
+      email: 'test@test.com',
+      nickname: 'nickname',
+    });
 
     await app.init();
   });

@@ -18,7 +18,7 @@ import { JwtGuard } from 'src/common/guards';
 import { CurrentUser } from 'src/common/decorators';
 import { NotificationsDto } from './dto/response';
 
-@ApiTags('notifications')
+@ApiTags('/notifications')
 @ApiBearerAuth()
 @ApiResponse({ status: 401, description: 'Unauthorized' })
 @UseGuards(JwtGuard)

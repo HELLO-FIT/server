@@ -36,7 +36,11 @@ describe('DELETE /users - 회원 탈퇴', () => {
 
   it('회원 탈퇴 성공시 204를 반환한다', async () => {
     // given
-    jest.spyOn(authService, 'getKakaoProfile').mockResolvedValue('kakaoId');
+    jest.spyOn(authService, 'getKakaoProfile').mockResolvedValue({
+      kakaoId: 'kakaoId',
+      email: 'test@test.com',
+      nickname: 'nickname',
+    });
 
     const {
       body: { accessToken },

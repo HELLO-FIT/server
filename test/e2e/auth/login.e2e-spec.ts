@@ -46,9 +46,11 @@ describe('POST /auth/login - 카카오 로그인', () => {
 
   it('최초 로그인시 회원가입이 진행되고, 201과 함께 accessToken을 반환한다', async () => {
     // given
-    const spy = jest
-      .spyOn(authService, 'getKakaoProfile')
-      .mockResolvedValue('kakaoId');
+    const spy = jest.spyOn(authService, 'getKakaoProfile').mockResolvedValue({
+      kakaoId: 'kakaoId',
+      email: 'test@test.com',
+      nickname: 'nickname',
+    });
 
     // when
     const { status, body } = await request(app.getHttpServer())

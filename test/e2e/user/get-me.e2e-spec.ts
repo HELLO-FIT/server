@@ -5,7 +5,7 @@ import { AppModule } from 'src/app.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from 'src/auth/auth.service';
 
-describe('DELETE /users - 회원 탈퇴', () => {
+describe('GET /users/me - 내 정보 조회', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let authService: AuthService;
@@ -28,13 +28,13 @@ describe('DELETE /users - 회원 탈퇴', () => {
 
   it('jwt 토큰이 없으면 401 에러를 반환한다', async () => {
     // when
-    const { status } = await request(app.getHttpServer()).delete('/users/me');
+    const { status } = await request(app.getHttpServer()).get('/users/me');
 
     // then
     expect(status).toBe(401);
   });
 
-  it('회원 탈퇴 성공시 204를 반환한다', async () => {
+  it('200과 함께 내 계정 정보를 반환한다', async () => {
     // given
     jest.spyOn(authService, 'getKakaoProfile').mockResolvedValue({
       kakaoId: 'kakaoId',
@@ -49,14 +49,18 @@ describe('DELETE /users - 회원 탈퇴', () => {
       .send({ kakaoAccessToken: 'valid' });
 
     // when
-    const { status } = await request(app.getHttpServer())
-      .delete('/users/me')
+    const { status, body } = await request(app.getHttpServer())
+      .get('/users/me')
       .set('Authorization', `Bearer ${accessToken}`);
 
     // then
-    expect(status).toBe(204);
-    const user = await prisma.user.findFirst();
-
-    expect(user).toBeNull();
+    expect(status).toBe(200);
+    expect(body).toEqual({
+      id: expect.any(String),
+      email: 'test@test.com',
+      nickname: 'nickname',
+      provider: 'kakao',
+      createdAt: expect.any(String),
+    });
   });
 });

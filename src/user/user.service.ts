@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { FacilityRepository } from 'src/normal/facility/facility.repository';
 import { SpecialFacilityRepository } from 'src/special/facility/special-facility.repository';
@@ -33,5 +33,17 @@ export class UserService {
       ...rest,
       items: rest.items.split(','),
     }));
+  }
+
+  async getMe(userId: string) {
+    const user = await this.userRepository.findUserById(userId);
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return {
+      ...user,
+      provider: 'kakao',
+    };
   }
 }

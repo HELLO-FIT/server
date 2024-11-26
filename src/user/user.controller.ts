@@ -8,7 +8,7 @@ import {
 import { UserService } from './user.service';
 import { JwtGuard } from 'src/common/guards';
 import { CurrentUser } from 'src/common/decorators';
-import { FavoriteFacilitiesDto } from './dto/response';
+import { FavoriteFacilitiesDto, MyProfileDto } from './dto/response';
 
 @ApiTags('/users')
 @ApiBearerAuth()
@@ -19,11 +19,24 @@ export class UserController {
 
   @ApiOperation({ summary: '회원 탈퇴' })
   @ApiResponse({ status: 204, description: '회원 탈퇴 성공' })
-  @Delete()
+  @Delete('me')
   @UseGuards(JwtGuard)
   @HttpCode(204)
   async deleteUser(@CurrentUser() userId: string) {
     await this.userService.deleteUser(userId);
+  }
+
+  @ApiOperation({ summary: '내 계정 정보 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '내 계정 정보 조회 성공',
+    type: MyProfileDto,
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @Get('me')
+  @UseGuards(JwtGuard)
+  async getMe(@CurrentUser() userId: string): Promise<MyProfileDto> {
+    return await this.userService.getMe(userId);
   }
 
   @ApiOperation({ summary: '찜 시설 목록 조회' })

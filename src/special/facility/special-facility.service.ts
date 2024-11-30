@@ -91,22 +91,53 @@ export class SpecialFacilityService {
     let facility;
     let courses;
     let favorite = false;
+    let reviews;
 
     if (userId) {
-      [facility, courses, favorite] = await Promise.all([
+      [facility, courses, favorite, reviews] = await Promise.all([
         this.specialFacilityRepository.findOne(businessId),
         this.specialCourseRepository.findManyByFacility(businessId),
         this.specialFacilityRepository.isFavorite(userId, businessId),
+        this.reviewRepository.findManySpecial(businessId),
       ]);
+
+      reviews = reviews.map((review) => {
+        return {
+          id: review.id,
+          userId: review.userId,
+          score: review.score,
+          content: review.content,
+          createdAt: review.createdAt,
+          nickname: review.user.nickname,
+          isMine: review.userId === userId,
+        };
+      });
     } else {
-      [facility, courses] = await Promise.all([
+      [facility, courses, reviews] = await Promise.all([
         this.specialFacilityRepository.findOne(businessId),
         this.specialCourseRepository.findManyByFacility(businessId),
+        this.reviewRepository.findManySpecial(businessId),
       ]);
+
+      reviews = reviews.map((review) => {
+        return {
+          id: review.id,
+          userId: review.userId,
+          score: review.score,
+          content: review.content,
+          createdAt: review.createdAt,
+          nickname: review.user.nickname,
+          isMine: false,
+        };
+      });
     }
 
     const items = new Set(courses.map((course) => course.itemName));
     const types = new Set(courses.map((course) => course.type));
+    const scoreSum = reviews.reduce((acc, review) => acc + review.score, 0);
+    const scoreAvg = reviews.length
+      ? Math.round((scoreSum / reviews.length) * 10) / 10
+      : 0;
 
     return {
       ...facility,
@@ -124,6 +155,8 @@ export class SpecialFacilityService {
           price: course.price,
         };
       }),
+      averageScore: scoreAvg,
+      reviews,
     };
   }
 

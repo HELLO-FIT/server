@@ -30,6 +30,9 @@ export class ReviewDto {
   @ApiProperty({ description: '리뷰 아이디' })
   id: string;
 
+  @ApiProperty({ description: '사용자 아이디' })
+  userId: string;
+
   @ApiProperty({ description: '사용자 닉네임' })
   nickname: string;
 

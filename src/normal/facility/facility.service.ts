@@ -91,9 +91,10 @@ export class FacilityService {
     let facility;
     let courses;
     let favorite = false;
+    let reviews;
 
     if (userId) {
-      [facility, courses, favorite] = await Promise.all([
+      [facility, courses, favorite, reviews] = await Promise.all([
         this.facilityRepository.findOne(businessId, serialNumber),
         this.courseRepository.findManyByFacility(businessId, serialNumber),
         this.facilityRepository.isFavorite({
@@ -101,15 +102,45 @@ export class FacilityService {
           serialNumber,
           userId,
         }),
+        this.reviewRepository.findManyNormal(businessId, serialNumber),
       ]);
+
+      reviews = reviews.map((review) => {
+        return {
+          id: review.id,
+          userId: review.userId,
+          score: review.score,
+          content: review.content,
+          createdAt: review.createdAt,
+          nickname: review.user.nickname,
+          isMine: review.userId === userId,
+        };
+      });
     } else {
-      [facility, courses] = await Promise.all([
+      [facility, courses, reviews] = await Promise.all([
         this.facilityRepository.findOne(businessId, serialNumber),
         this.courseRepository.findManyByFacility(businessId, serialNumber),
+        this.reviewRepository.findManyNormal(businessId, serialNumber),
       ]);
+
+      reviews = reviews.map((review) => {
+        return {
+          id: review.id,
+          userId: review.userId,
+          score: review.score,
+          content: review.content,
+          createdAt: review.createdAt,
+          nickname: review.user.nickname,
+          isMine: false,
+        };
+      });
     }
 
     const items = new Set(courses.map((course) => course.itemName));
+    const scoreSum = reviews.reduce((acc, review) => acc + review.score, 0);
+    const scoreAvg = reviews.length
+      ? Math.round((scoreSum / reviews.length) * 10) / 10
+      : 0;
 
     return {
       businessId: facility.businessId,
@@ -137,6 +168,8 @@ export class FacilityService {
           price: course.price,
         };
       }),
+      averageScore: scoreAvg,
+      reviews,
     };
   }
 

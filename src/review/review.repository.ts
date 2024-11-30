@@ -34,6 +34,25 @@ export class ReviewRepository {
       });
     }
   }
+
+  async findManyNormal(businessId: string, serialNumber: string) {
+    return await this.prisma.review.findMany({
+      where: { businessId, serialNumber },
+      select: {
+        id: true,
+        userId: true,
+        score: true,
+        content: true,
+        createdAt: true,
+        user: {
+          select: {
+            nickname: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }
 
 export type CreateInput = {

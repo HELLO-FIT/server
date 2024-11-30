@@ -26,6 +26,26 @@ export class CourseDetailDto {
   price: number;
 }
 
+export class ReviewDto {
+  @ApiProperty({ description: '리뷰 아이디' })
+  id: string;
+
+  @ApiProperty({ description: '사용자 닉네임' })
+  nickname: string;
+
+  @ApiProperty({ description: '리뷰 별점', example: 4.5 })
+  score: number;
+
+  @ApiProperty({ description: '리뷰 내용' })
+  content: string;
+
+  @ApiProperty({ description: '리뷰 작성 시간' })
+  createdAt: Date;
+
+  @ApiProperty({ description: '내가 쓴 리뷰 여부' })
+  isMine: boolean;
+}
+
 export class FacilityDetail {
   @ApiProperty({ description: '사업자 등록 번호' })
   businessId: string;
@@ -72,4 +92,14 @@ export class FacilityDetail {
     isArray: true,
   })
   courses: CourseDetailDto[];
+
+  @ApiProperty({ description: '평균 별점', example: 4.5 })
+  averageScore: number;
+
+  @ApiProperty({
+    description: '리뷰 리스트',
+    type: ReviewDto,
+    isArray: true,
+  })
+  reviews: ReviewDto[];
 }

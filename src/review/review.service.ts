@@ -17,4 +17,9 @@ export class ReviewService {
       return b.createdAt.getTime() - a.createdAt.getTime();
     });
   }
+
+  async deleteOne(userId: string, reviewId: string) {
+    await this.reviewRepository.deleteOne(userId, reviewId);
+    return;
+  }
 }

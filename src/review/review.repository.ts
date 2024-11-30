@@ -122,6 +122,13 @@ export class ReviewRepository {
       facilityName: string;
     }[];
   }
+
+  async deleteOne(userId: string, reviewId: string) {
+    await this.prisma.review.deleteMany({
+      where: { id: reviewId, userId },
+    });
+    return;
+  }
 }
 
 export type CreateInput = {

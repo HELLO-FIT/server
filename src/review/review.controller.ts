@@ -1,4 +1,13 @@
-import { Controller, Get, UseGuards, Delete, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Delete,
+  HttpCode,
+  Put,
+  Body,
+  Param,
+} from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { JwtGuard } from 'src/common/guards';
 import { CurrentUser } from 'src/common/decorators';
@@ -9,6 +18,7 @@ import {
   ApiOperation,
 } from '@nestjs/swagger';
 import { MyReviewDto } from './dto/response';
+import { CreateReviewDto } from 'src/normal/facility/dto/request';
 
 @ApiTags('/reviews')
 @ApiBearerAuth()
@@ -31,6 +41,19 @@ export class ReviewController {
   @HttpCode(204)
   async deleteReview(@CurrentUser() userId: string, reviewId: string) {
     await this.reviewService.deleteOne(userId, reviewId);
+    return;
+  }
+
+  @ApiOperation({ summary: '리뷰 수정' })
+  @ApiResponse({ status: 204, description: '수정 성공' })
+  @Put(':reviewId')
+  @HttpCode(204)
+  async updateReview(
+    @CurrentUser() userId: string,
+    @Param('reviewId') reviewId: string,
+    @Body() dto: CreateReviewDto,
+  ) {
+    await this.reviewService.update({ userId, reviewId, ...dto });
     return;
   }
 }

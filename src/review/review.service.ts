@@ -22,4 +22,16 @@ export class ReviewService {
     await this.reviewRepository.deleteOne(userId, reviewId);
     return;
   }
+
+  async update(input: UpdateInput) {
+    await this.reviewRepository.updateOne(input);
+    return;
+  }
 }
+
+export type UpdateInput = {
+  userId: string;
+  reviewId: string;
+  content: string;
+  score: number;
+};

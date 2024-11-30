@@ -129,12 +129,30 @@ export class ReviewRepository {
     });
     return;
   }
+
+  async updateOne(input: UpdateInput) {
+    await this.prisma.review.update({
+      where: { id: input.reviewId, userId: input.userId },
+      data: {
+        score: input.score,
+        content: input.content,
+      },
+    });
+    return;
+  }
 }
 
 export type CreateInput = {
   userId: string;
   businessId: string;
   serialNumber?: string;
+  score: number;
+  content: string;
+};
+
+export type UpdateInput = {
+  userId: string;
+  reviewId: string;
   score: number;
   content: string;
 };

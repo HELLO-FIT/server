@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { FacilityModule } from './normal/facility/facility.module';
 import { SpecialFacilityModule } from './special/facility/special-facility.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SpecialFacilityModule } from './special/facility/special-facility.modul
     }),
     FacilityModule,
     SpecialFacilityModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}

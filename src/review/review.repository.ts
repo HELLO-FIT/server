@@ -72,6 +72,56 @@ export class ReviewRepository {
       orderBy: { createdAt: 'desc' },
     });
   }
+
+  async findManyNormalByUserId(userId: string) {
+    return (await this.prisma.$queryRaw`
+      select
+        r.id,
+        r."businessId",
+        r."serialNumber",
+        r.score,
+        r.content,
+        r."createdAt",
+        f.name as "facilityName"
+      from "Review" r
+      join "Facility" f
+        on r."businessId" = f."businessId" and r."serialNumber" = f."serialNumber"
+      where r."userId" = ${userId}
+    `) as {
+      id: string;
+      businessId: string;
+      serialNumber: string;
+      score: number;
+      content: string;
+      createdAt: Date;
+      facilityName: string;
+    }[];
+  }
+
+  async findManySpecialByUserId(userId: string) {
+    return (await this.prisma.$queryRaw`
+      select
+        r.id,
+        r."businessId",
+        r."serialNumber",
+        r.score,
+        r.content,
+        r."createdAt",
+        f.name as "facilityName"
+      from "Review" r
+      join "Facility" f
+        on r."businessId" = f."businessId"
+      where r."userId" = ${userId} and r."serialNumber" is null
+    `) as {
+      id: string;
+      businessId: string;
+      serialNumber: null;
+      score: number;
+      content: string;
+      createdAt: Date;
+      facilityName: string;
+    }[];
+  }
 }
 
 export type CreateInput = {

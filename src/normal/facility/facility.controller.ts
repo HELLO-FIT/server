@@ -7,6 +7,8 @@ import {
   UseGuards,
   Put,
   HttpCode,
+  Post,
+  Body,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +23,7 @@ import {
   GetFacilitiesDto,
   GetPopularFacilitiesDto,
   GetFacilityDetailDto,
+  CreateReviewDto,
 } from './dto/request';
 import {
   FacilitiesDto,
@@ -32,6 +35,7 @@ import { CurrentUser, OptionalCurrentUser } from 'src/common/decorators';
 
 @ApiTags('/normal/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
+@ApiResponse({ status: 401, description: '로그인 필요' })
 @Controller('normal/facilities')
 export class FacilityController {
   constructor(private facilityService: FacilityService) {}
@@ -163,10 +167,6 @@ export class FacilityController {
     status: 204,
     description: '시설 찜하기(토글) 성공',
   })
-  @ApiResponse({
-    status: 401,
-    description: '로그인 필요',
-  })
   @Put(':businessId/:serialNumber/favorite')
   @HttpCode(204)
   @UseGuards(JwtGuard)
@@ -178,6 +178,39 @@ export class FacilityController {
       businessId,
       serialNumber,
       userId,
+    });
+  }
+
+  @ApiOperation({ summary: '리뷰 작성' })
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'serialNumber',
+    description: '시설 일련 번호',
+    example: '1',
+  })
+  @ApiParam({
+    name: 'businessId',
+    description: '사업자 등록 번호',
+    example: '1209094142',
+  })
+  @ApiResponse({
+    status: 201,
+    description: '리뷰 작성 성공',
+  })
+  @UseGuards(JwtGuard)
+  @Post(':businessId/:serialNumber/review')
+  @HttpCode(201)
+  async createReview(
+    @Param('businessId') businessId: string,
+    @Param('serialNumber') serialNumber: string,
+    @CurrentUser() userId: string,
+    @Body() createReviewDto: CreateReviewDto,
+  ) {
+    await this.facilityService.createReview({
+      userId,
+      businessId,
+      serialNumber,
+      ...createReviewDto,
     });
   }
 }

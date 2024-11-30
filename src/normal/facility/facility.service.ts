@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { FacilityRepository } from './facility.repository';
 import { CourseRepository } from '../course/course.repository';
 import { NotificationRepository } from 'src/notifications/notification.repository';
+import { ReviewRepository } from 'src/review/review.repository';
 
 @Injectable()
 export class FacilityService {
@@ -9,6 +10,7 @@ export class FacilityService {
     private facilityRepository: FacilityRepository,
     private courseRepository: CourseRepository,
     private notificationRepository: NotificationRepository,
+    private reviewRepository: ReviewRepository,
   ) {}
 
   async getManyByLocalCode(localCode: string) {
@@ -178,4 +180,37 @@ export class FacilityService {
     }
     return;
   }
+
+  async createReview(createReviewInput: CreateReviewInput) {
+    const { userId, businessId, serialNumber, score, content } =
+      createReviewInput;
+
+    const review = await this.reviewRepository.findOne({
+      userId,
+      businessId,
+      serialNumber,
+    });
+
+    if (review) {
+      throw new HttpException('이미 리뷰를 작성하셨습니다.', 400);
+    }
+
+    await this.reviewRepository.create({
+      userId,
+      businessId,
+      serialNumber,
+      score,
+      content,
+    });
+
+    return;
+  }
 }
+
+export type CreateReviewInput = {
+  userId: string;
+  businessId: string;
+  serialNumber: string;
+  score: number;
+  content: string;
+};

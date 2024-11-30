@@ -46,7 +46,7 @@ export class AuthService {
     if (result.status !== 200 || !data.id || !data.kakao_account.email) {
       throw new HttpException('Invalid access token', 401);
     }
-    console.log(data);
+
     return {
       kakaoId: data.id.toString(),
       email: data.kakao_account.email,

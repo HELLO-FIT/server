@@ -16,6 +16,7 @@ import {
   ApiBearerAuth,
   ApiResponse,
   ApiOperation,
+  ApiParam,
 } from '@nestjs/swagger';
 import { MyReviewDto } from './dto/response';
 import { CreateReviewDto } from 'src/normal/facility/dto/request';
@@ -36,6 +37,7 @@ export class ReviewController {
   }
 
   @ApiOperation({ summary: '리뷰 삭제' })
+  @ApiParam({ name: 'reviewId', description: '리뷰 아이디' })
   @ApiResponse({ status: 204, description: '삭제 성공' })
   @Delete(':reviewId')
   @HttpCode(204)
@@ -45,6 +47,7 @@ export class ReviewController {
   }
 
   @ApiOperation({ summary: '리뷰 수정' })
+  @ApiParam({ name: 'reviewId', description: '리뷰 아이디' })
   @ApiResponse({ status: 204, description: '수정 성공' })
   @Put(':reviewId')
   @HttpCode(204)

@@ -7,6 +7,8 @@ import {
   Put,
   HttpCode,
   UseGuards,
+  Post,
+  Body,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -28,9 +30,11 @@ import {
 } from './dto/response';
 import { JwtGuard, JwtOptionalGuard } from 'src/common/guards';
 import { CurrentUser, OptionalCurrentUser } from 'src/common/decorators';
+import { CreateReviewDto } from 'src/normal/facility/dto/request';
 
 @ApiTags('/special/facilities')
 @ApiResponse({ status: 400, description: '유효성 검사 실패' })
+@ApiResponse({ status: 401, description: '로그인 필요' })
 @Controller('special/facilities')
 export class SpecialFacilityController {
   constructor(private specialFacilityService: SpecialFacilityService) {}
@@ -188,10 +192,6 @@ export class SpecialFacilityController {
     status: 200,
     description: '성공',
   })
-  @ApiResponse({
-    status: 401,
-    description: '로그인 필요',
-  })
   @Put(':businessId/favorite')
   @HttpCode(204)
   @UseGuards(JwtGuard)
@@ -200,5 +200,30 @@ export class SpecialFacilityController {
     @CurrentUser() userId: string,
   ) {
     return await this.specialFacilityService.toggleFavorite(userId, businessId);
+  }
+
+  @ApiOperation({ summary: '특수시설 리뷰 작성' })
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'businessId',
+    description: '사업자 등록 번호',
+    example: '7607000537',
+  })
+  @ApiResponse({ status: 201, description: '성공' })
+  @ApiResponse({ status: 409, description: '이미 리뷰를 작성했습니다' })
+  @Post(':businessId/review')
+  @HttpCode(201)
+  @UseGuards(JwtGuard)
+  async createReview(
+    @Param('businessId') businessId: string,
+    @CurrentUser() userId: string,
+    @Body() createReviewDto: CreateReviewDto,
+  ) {
+    await this.specialFacilityService.createReview({
+      userId,
+      businessId,
+      ...createReviewDto,
+    });
+    return;
   }
 }

@@ -193,10 +193,8 @@ export class FacilityController {
     description: '사업자 등록 번호',
     example: '1209094142',
   })
-  @ApiResponse({
-    status: 201,
-    description: '리뷰 작성 성공',
-  })
+  @ApiResponse({ status: 201, description: '리뷰 작성 성공' })
+  @ApiResponse({ status: 409, description: '이미 리뷰를 작성하셨습니다.' })
   @UseGuards(JwtGuard)
   @Post(':businessId/:serialNumber/review')
   @HttpCode(201)
@@ -212,5 +210,6 @@ export class FacilityController {
       serialNumber,
       ...createReviewDto,
     });
+    return;
   }
 }

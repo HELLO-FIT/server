@@ -132,7 +132,7 @@ export class ReviewRepository {
   }
 
   async deleteOne(userId: string, reviewId: string) {
-    await this.prisma.review.deleteMany({
+    await this.prisma.review.delete({
       where: { id: reviewId, userId },
     });
     return;

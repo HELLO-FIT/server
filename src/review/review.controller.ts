@@ -41,7 +41,10 @@ export class ReviewController {
   @ApiResponse({ status: 204, description: '삭제 성공' })
   @Delete(':reviewId')
   @HttpCode(204)
-  async deleteReview(@CurrentUser() userId: string, reviewId: string) {
+  async deleteReview(
+    @CurrentUser() userId: string,
+    @Param('reviewId') reviewId: string,
+  ) {
     await this.reviewService.deleteOne(userId, reviewId);
     return;
   }

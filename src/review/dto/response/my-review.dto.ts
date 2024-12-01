@@ -7,8 +7,15 @@ export class MyReviewDto {
   @ApiProperty({ description: '사업자번호' })
   businessId: string;
 
-  @ApiProperty({ description: '시설 일련번호', nullable: true, type: String })
+  @ApiProperty({
+    description: '시설 일련번호 - null이면 특수시설 리뷰입니다',
+    nullable: true,
+    type: String,
+  })
   serialNumber: string | null;
+
+  @ApiProperty({ description: '사용자 닉네임' })
+  nickname: string;
 
   @ApiProperty({ description: '별점' })
   score: number;

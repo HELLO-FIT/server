@@ -82,10 +82,13 @@ export class ReviewRepository {
         r.score,
         r.content,
         r."createdAt",
-        f.name as "facilityName"
+        f.name as "facilityName",
+        u.nickname as "nickname"
       from "Review" r
       join "Facility" f
         on r."businessId" = f."businessId" and r."serialNumber" = f."serialNumber"
+      join "User" u
+        on r."userId" = u.id
       where r."userId" = ${userId}
     `) as {
       id: string;
@@ -95,6 +98,7 @@ export class ReviewRepository {
       content: string;
       createdAt: Date;
       facilityName: string;
+      nickname: string;
     }[];
   }
 
@@ -107,10 +111,13 @@ export class ReviewRepository {
         r.score,
         r.content,
         r."createdAt",
-        f.name as "facilityName"
+        f.name as "facilityName",
+        u.nickname as "nickname"
       from "Review" r
       join "Facility" f
         on r."businessId" = f."businessId"
+      join "User" u
+        on r."userId" = u.id
       where r."userId" = ${userId} and r."serialNumber" is null
     `) as {
       id: string;
@@ -120,6 +127,7 @@ export class ReviewRepository {
       content: string;
       createdAt: Date;
       facilityName: string;
+      nickname: string;
     }[];
   }
 

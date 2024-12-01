@@ -89,6 +89,7 @@ describe('GET /reviews/my - 내 리뷰 조회', () => {
         content: 'test',
         createdAt: expect.any(String),
         facilityName: 'test1',
+        nickname: 'nickname',
       },
     ]);
   });

@@ -52,21 +52,93 @@ export class SpecialFacilityService {
   }
 
   async getManyPopular(localCode: string) {
-    return await this.specialFacilityRepository.findManyPopular(localCode);
+    const facilities =
+      await this.specialFacilityRepository.findManyPopular(localCode);
+
+    const reviewAndFavorites = facilities.map(async (facility) => {
+      const review = await this.reviewRepository.getReviewScore(
+        facility.businessId,
+      );
+      const favoriteCount =
+        await this.specialFacilityRepository.getFavoriteCount(
+          facility.businessId,
+        );
+
+      return {
+        ...facility,
+        items: facility.items.split(','),
+        averageScore: review[0].averageScore
+          ? Number(review[0].averageScore)
+          : 0,
+        reviewCount: Number(review[0].reviewCount),
+        favoriteCount: favoriteCount,
+        totalParticipantCount: Number(facility.totalParticipantCount),
+      };
+    });
+
+    return Promise.all(reviewAndFavorites);
   }
 
   async getManyPopularByType(localCode: string, type: string) {
-    return await this.specialFacilityRepository.findManyPopularByType(
-      localCode,
-      type,
-    );
+    const facilities =
+      await this.specialFacilityRepository.findManyPopularByType(
+        localCode,
+        type,
+      );
+
+    const reviewAndFavorites = facilities.map(async (facility) => {
+      const review = await this.reviewRepository.getReviewScore(
+        facility.businessId,
+      );
+      const favoriteCount =
+        await this.specialFacilityRepository.getFavoriteCount(
+          facility.businessId,
+        );
+
+      return {
+        ...facility,
+        items: facility.items.split(','),
+        averageScore: review[0].averageScore
+          ? Number(review[0].averageScore)
+          : 0,
+        reviewCount: Number(review[0].reviewCount),
+        favoriteCount: favoriteCount,
+        totalParticipantCount: Number(facility.totalParticipantCount),
+      };
+    });
+
+    return Promise.all(reviewAndFavorites);
   }
 
   async getManyPopularByItemName(localCode: string, itemName: string) {
-    return await this.specialFacilityRepository.findManyPopularByItemName(
-      localCode,
-      itemName,
-    );
+    const facilities =
+      await this.specialFacilityRepository.findManyPopularByItemName(
+        localCode,
+        itemName,
+      );
+
+    const reviewAndFavorites = facilities.map(async (facility) => {
+      const review = await this.reviewRepository.getReviewScore(
+        facility.businessId,
+      );
+      const favoriteCount =
+        await this.specialFacilityRepository.getFavoriteCount(
+          facility.businessId,
+        );
+
+      return {
+        ...facility,
+        items: facility.items.split(','),
+        averageScore: review[0].averageScore
+          ? Number(review[0].averageScore)
+          : 0,
+        reviewCount: Number(review[0].reviewCount),
+        favoriteCount: favoriteCount,
+        totalParticipantCount: Number(facility.totalParticipantCount),
+      };
+    });
+
+    return Promise.all(reviewAndFavorites);
   }
 
   async getManyPopularByItemNameAndType({
@@ -78,13 +150,35 @@ export class SpecialFacilityService {
     itemName: string;
     type: string;
   }) {
-    return await this.specialFacilityRepository.findManyPopularByItemNameAndType(
-      {
+    const facilities =
+      await this.specialFacilityRepository.findManyPopularByItemNameAndType({
         localCode,
         itemName,
         type,
-      },
-    );
+      });
+
+    const reviewAndFavorites = facilities.map(async (facility) => {
+      const review = await this.reviewRepository.getReviewScore(
+        facility.businessId,
+      );
+      const favoriteCount =
+        await this.specialFacilityRepository.getFavoriteCount(
+          facility.businessId,
+        );
+
+      return {
+        ...facility,
+        items: facility.items.split(','),
+        averageScore: review[0].averageScore
+          ? Number(review[0].averageScore)
+          : 0,
+        reviewCount: Number(review[0].reviewCount),
+        favoriteCount: favoriteCount,
+        totalParticipantCount: Number(facility.totalParticipantCount),
+      };
+    });
+
+    return Promise.all(reviewAndFavorites);
   }
 
   async getDetail(businessId: string, userId: string | null) {

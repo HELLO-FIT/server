@@ -23,6 +23,9 @@ describe('GET /special/facilities/popular - 인기 특수시설 목록 반환', 
     await prisma.specialFacility.deleteMany();
     await prisma.specialCourse.deleteMany();
     await prisma.specialCourseHistory.deleteMany();
+    await prisma.review.deleteMany();
+    await prisma.specialFavorite.deleteMany();
+    await prisma.user.deleteMany();
   });
 
   it('localCode가 없으면 400에러를 반환한다', async () => {
@@ -149,6 +152,9 @@ describe('GET /special/facilities/popular - 인기 특수시설 목록 반환', 
         detailAddress: null,
         totalParticipantCount: 30,
         items: ['test1'],
+        averageScore: 0,
+        reviewCount: 0,
+        favoriteCount: 0,
       },
     ]);
   });

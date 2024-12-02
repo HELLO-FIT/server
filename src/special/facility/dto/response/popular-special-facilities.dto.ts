@@ -32,4 +32,13 @@ export class PopularSpecialFacilitiesDto {
 
   @ApiProperty({ description: '종목명 리스트', type: String, isArray: true })
   items: string[];
+
+  @ApiProperty({ description: '평균 평점' })
+  averageScore: number;
+
+  @ApiProperty({ description: '리뷰 개수' })
+  reviewCount: number;
+
+  @ApiProperty({ description: '찜 개수' })
+  favoriteCount: number;
 }

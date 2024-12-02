@@ -135,7 +135,7 @@ export class SpecialFacilityRepository {
   }
 
   async findManyPopular(localCode: string) {
-    const data = (await this.prisma.$queryRaw`
+    return (await this.prisma.$queryRaw`
       select
         a."businessId",
         b."name",
@@ -163,18 +163,10 @@ export class SpecialFacilityRepository {
         on a."businessId" = b."businessId"
       order by a."totalParticipantCount" desc
     `) as PopularSpecialFacilitiesInfo[];
-
-    return data.map((facility) => {
-      return {
-        ...facility,
-        totalParticipantCount: Number(facility.totalParticipantCount),
-        items: facility.items.split(','),
-      };
-    });
   }
 
   async findManyPopularByType(localCode: string, type: string) {
-    const data = (await this.prisma.$queryRaw`
+    return (await this.prisma.$queryRaw`
       select
         a."businessId",
         b."name",
@@ -204,18 +196,10 @@ export class SpecialFacilityRepository {
       where a."types" like ${`%${type}%`}
       order by a."totalParticipantCount" desc
     `) as PopularSpecialFacilitiesInfo[];
-
-    return data.map((facility) => {
-      return {
-        ...facility,
-        totalParticipantCount: Number(facility.totalParticipantCount),
-        items: facility.items.split(','),
-      };
-    });
   }
 
   async findManyPopularByItemName(localCode: string, itemName: string) {
-    const data = (await this.prisma.$queryRaw`
+    return (await this.prisma.$queryRaw`
       select
         a."businessId",
         b."name",
@@ -244,14 +228,6 @@ export class SpecialFacilityRepository {
       where a."items" like ${`%${itemName}%`}
       order by a."totalParticipantCount" desc
     `) as PopularSpecialFacilitiesInfo[];
-
-    return data.map((facility) => {
-      return {
-        ...facility,
-        totalParticipantCount: Number(facility.totalParticipantCount),
-        items: facility.items.split(','),
-      };
-    });
   }
 
   async findManyPopularByItemNameAndType({
@@ -263,7 +239,7 @@ export class SpecialFacilityRepository {
     itemName: string;
     type: string;
   }) {
-    const data = (await this.prisma.$queryRaw`
+    return (await this.prisma.$queryRaw`
       select
         a."businessId",
         b."name",
@@ -293,14 +269,6 @@ export class SpecialFacilityRepository {
       where a."items" like ${`%${itemName}%`} and a."types" like ${`%${type}%`}
       order by a."totalParticipantCount" desc
     `) as PopularSpecialFacilitiesInfo[];
-
-    return data.map((facility) => {
-      return {
-        ...facility,
-        totalParticipantCount: Number(facility.totalParticipantCount),
-        items: facility.items.split(','),
-      };
-    });
   }
 
   async findOne(businessId: string) {
@@ -370,6 +338,12 @@ export class SpecialFacilityRepository {
       join "FavoriteFacility" c
       on a."businessId" = c."businessId";
     `) as SpecialFacilitiesInfo[];
+  }
+
+  async getFavoriteCount(businessId: string) {
+    return await this.prisma.specialFavorite.count({
+      where: { businessId },
+    });
   }
 }
 

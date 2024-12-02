@@ -148,6 +148,26 @@ export class ReviewRepository {
     });
     return;
   }
+
+  async getReviewScore(businessId: string, serialNumber?: string) {
+    if (serialNumber) {
+      return (await this.prisma.$queryRaw`
+        select
+          ROUND(CAST(AVG(score) AS numeric), 1) AS "averageScore",
+          count(*) as "reviewCount"
+        from "Review"
+        where "businessId" = ${businessId} and "serialNumber" = ${serialNumber}
+      `) as ReviewScore[];
+    } else {
+      return (await this.prisma.$queryRaw`
+        select
+          ROUND(CAST(AVG(score) AS numeric), 1) AS "averageScore",
+          count(*) as "reviewCount"
+        from "Review"
+        where "businessId" = ${businessId} and "serialNumber" is null
+      `) as ReviewScore[];
+    }
+  }
 }
 
 export type CreateInput = {
@@ -163,4 +183,9 @@ export type UpdateInput = {
   reviewId: string;
   score: number;
   content: string;
+};
+
+export type ReviewScore = {
+  averageScore: number;
+  reviewCount: number;
 };

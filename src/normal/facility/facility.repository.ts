@@ -276,6 +276,15 @@ export class FacilityRepository {
         on a."businessId" = c."businessId" and a."serialNumber" = c."serialNumber";
     `) as FacilitiesInfo[];
   }
+
+  async getFavoriteCount(businessId: string, serialNumber: string) {
+    return await this.prisma.normalFavorite.count({
+      where: {
+        businessId,
+        serialNumber,
+      },
+    });
+  }
 }
 
 export type FacilitiesInfo = {

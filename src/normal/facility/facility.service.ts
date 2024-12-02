@@ -53,12 +53,29 @@ export class FacilityService {
   async getManyPopularByLocalCode(localCode: string) {
     const facilities =
       await this.facilityRepository.findManyPopularByLocalCode(localCode);
-    return facilities.map((facility) => {
+
+    const reviewAndFavorites = facilities.map(async (facility) => {
+      const reviews = await this.reviewRepository.getReviewScore(
+        facility.businessId,
+        facility.serialNumber,
+      );
+      const favorites = await this.facilityRepository.getFavoriteCount(
+        facility.businessId,
+        facility.serialNumber,
+      );
+
       return {
         ...facility,
         items: facility.items.split(','),
+        averageScore: reviews[0].averageScore
+          ? Number(reviews[0].averageScore)
+          : 0,
+        reviewCount: Number(reviews[0].reviewCount),
+        favoriteCount: favorites,
       };
     });
+
+    return Promise.all(reviewAndFavorites);
   }
 
   async getManyPopularByLocalCodeAndItemName(
@@ -71,12 +88,28 @@ export class FacilityService {
         itemName,
       );
 
-    return facilities.map((facility) => {
+    const reviewAndFavorites = facilities.map(async (facility) => {
+      const reviews = await this.reviewRepository.getReviewScore(
+        facility.businessId,
+        facility.serialNumber,
+      );
+      const favorites = await this.facilityRepository.getFavoriteCount(
+        facility.businessId,
+        facility.serialNumber,
+      );
+
       return {
         ...facility,
         items: facility.items.split(','),
+        averageScore: reviews[0].averageScore
+          ? Number(reviews[0].averageScore)
+          : 0,
+        reviewCount: Number(reviews[0].reviewCount),
+        favoriteCount: favorites,
       };
     });
+
+    return Promise.all(reviewAndFavorites);
   }
 
   async getDetail({

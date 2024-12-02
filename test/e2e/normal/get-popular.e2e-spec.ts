@@ -23,6 +23,9 @@ describe('GET /normal/facilities/popular - 인기 있는 시설 목록 받기', 
     await prisma.facility.deleteMany();
     await prisma.course.deleteMany();
     await prisma.courseHistory.deleteMany();
+    await prisma.review.deleteMany();
+    await prisma.normalFavorite.deleteMany();
+    await prisma.user.deleteMany();
   });
 
   it('localCode가 없으면 400 에러를 반환한다', async () => {
@@ -134,6 +137,9 @@ describe('GET /normal/facilities/popular - 인기 있는 시설 목록 받기', 
         owner: 'test1',
         totalParticipantCount: 30,
         items: ['test1'],
+        averageScore: 0,
+        reviewCount: 0,
+        favoriteCount: 0,
       },
     ]);
   });
@@ -244,6 +250,57 @@ describe('GET /normal/facilities/popular - 인기 있는 시설 목록 받기', 
       ],
     });
 
+    const user = await prisma.user.create({
+      data: {
+        id: 'test',
+        email: 'test@test.com',
+        nickname: 'test',
+      },
+    });
+    const user2 = await prisma.user.create({
+      data: {
+        id: 'test2',
+        email: 'test2test.com',
+        nickname: 'test2',
+      },
+    });
+
+    await prisma.normalFavorite.create({
+      data: {
+        userId: user.id,
+        businessId: 'test1',
+        serialNumber: 'test1',
+      },
+    });
+
+    await prisma.normalFavorite.create({
+      data: {
+        userId: user2.id,
+        businessId: 'test1',
+        serialNumber: 'test1',
+      },
+    });
+
+    await prisma.review.create({
+      data: {
+        userId: user.id,
+        businessId: 'test1',
+        serialNumber: 'test1',
+        score: 4,
+        content: 'test',
+      },
+    });
+
+    await prisma.review.create({
+      data: {
+        userId: user2.id,
+        businessId: 'test1',
+        serialNumber: 'test1',
+        score: 5,
+        content: 'test',
+      },
+    });
+
     // when
     const { status, body } = await request(app.getHttpServer()).get(
       '/normal/facilities/popular?localCode=12345&itemName=test1',
@@ -265,6 +322,9 @@ describe('GET /normal/facilities/popular - 인기 있는 시설 목록 받기', 
         owner: 'test1',
         totalParticipantCount: 30,
         items: ['test1'],
+        averageScore: 4.5,
+        reviewCount: 2,
+        favoriteCount: 2,
       },
     ]);
   });

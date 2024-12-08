@@ -161,3 +161,18 @@ model SpecialCourseHistory {
 
   @@id([businessId, courseId, startDate])
 }
+
+model NormalPreviousCourse {
+  businessId   String
+  serialNumber String
+  count        Int
+
+  @@id([businessId, serialNumber])
+}
+
+model SpecialPreviousCourse {
+  businessId String
+  count      Int
+
+  @@id([businessId])
+}

@@ -1,85 +1,82 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+![image](https://github.com/user-attachments/assets/9ca928c0-d139-4ee5-80f7-5b314c51e705)
+## 🗺️ 지도 기반 주변 인기 스포츠 시설을 간편하게 탐색하는 웹 서비스, HelloFit
+🌐 스포츠 이용권을 보유한 사용자들은 수많은 스포츠 시설과 강좌를 직접 탐색해야 하는 번거로운 과정을 겪는다. 시설 및 강좌를 선택하기 위해서는 시설의 위치, 강좌 정보, 운영 시간, 가격 등 다양한 요소를 고려해야 하며 이는 매우 복잡하고 시간이 소요되는 과정이다. 또한 기존 스포츠 강좌 사이트는 시설들의 위치를 개별로 확인해야 하는 번거로움이 존재하며, 사람들이 어떤 시설을 많이 이용하는지 트렌드 정보를 파악하기 어렵다. 
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+헬로핏은 ‘지도’ 기반 시설 탐색, 누적 수강생 데이터 기반 ‘시설 트렌드’ 추천, ‘시설 후기’ 서비스 등 탐색 경험을 개선할 다양한 기능을 제공한다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### 👉 [**HelloFit 구경가기**](https://www.hellofit.site/)
 
-## Description
+<br/>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 💙 주요 기능
+![image](https://github.com/user-attachments/assets/5d1ab660-7adf-41f1-9a5a-8abb06b5d86b)
 
-## Project setup
+### 👋 지도 기반으로 가까운 시설 간편하게 탐색
+  헬로핏은 사용자 위치와 가까운 스포츠 시설을 쉽게 탐색할 수 있도록 지도 기반의 탐색 기능을 제공한다. 이를 통해 사용자는 시설의 위치를 일일이 파악하지 않아도 지도를 통해 주변 시설을 간편히 찾을 수 있다. 또한, 종목별 누적 수강생 수 기반으로 인기 스포츠 종목 필터를 제공한다. 이 필터를 활용하면 인기 있는 종목의 시설들을 지도에서 한눈에 확인할 수 있다.  
+  
+![image](https://github.com/user-attachments/assets/a5e04e32-34a1-490d-9c18-b4e8624d4576)
 
-```bash
-$ npm install
-```
+### 👋 (일반/장애) 이용권 유형 별 맞춤 정보 제공
+헬로핏은 이용권 종류에 따라 일반, 특수 두가지 버전의 서비스를 제공하며, 각 버전에는 보유한 이용권에 맞는 맞춤 시설 및 강좌 정보를 제공한다. 사용자는 토글 버튼을 통해 간단하게 버전을 전환하면서 탐색할 수 있다. 특수 모드에서는 장애인 사용자가 시설 선택 시 고려해야 하는 요소가 많기 때문에 장애 특수 필터와 시설 장애 지원 정보를 제공함으로써 적절한 시설 선택을 할 수 있도록 돕는다.
 
-## Compile and run the project
+![image](https://github.com/user-attachments/assets/d2f074a7-810d-4769-9741-8fb1d566cb71)
+![image](https://github.com/user-attachments/assets/83b761e2-7807-4bab-a8fe-7062a4e7ac56)
 
-```bash
-# development
-$ npm run start
+### 👋 누적 수강생 수 기반으로 인기 있는 ‘스포츠 종목’ 추천
+전체 시설의 누적 수강생 수 데이터를 추출하여 가장 인기 있는 스포츠 종목 필터를 제공한다. 이를 통해 사용자는 인기 스포츠 종목을 간편하게 파악할 수 있다.
+![image](https://github.com/user-attachments/assets/dcf413ba-4929-468f-9402-a34c5b09ed32)
 
-# watch mode
-$ npm run start:dev
+### 👋 인기 시설의 트렌드 정보 제공(누적 수강생 수 데이터 기반)
+헬로핏은 누적 수강생 수 데이터를 기반으로 지역별 인기 시설 상위 5곳을 추천한다. 또한 지역 및 종목 필터를 제공해 조건에 맞는 인기 시설을 쉽게 파악할 수 있다. 이를 통해 사용자는 스포츠 시설의 트렌드를 한번에 파악하고 시설 선택을 더 간편하게 할 수 있다.
 
-# production mode
-$ npm run start:prod
-```
+![image](https://github.com/user-attachments/assets/1225140e-e9ea-4ae3-a5ee-bfc23a1371f2)
 
-## Run tests
+### 👋 시설 후기 및 별점 등록 기능 제공
+사용자가 시설에 대한 후기를 작성하고 별점을 남길 수 있는 기능을 제공한다. 시설 후기 정보를 활용하여 시설과 강좌 품질, 강사의 전문성을 사전에 확인할 수 있다. 
 
-```bash
-# unit tests
-$ npm run test
+![image](https://github.com/user-attachments/assets/01efefb5-cfcd-409c-9378-d208e8134843)
 
-# e2e tests
-$ npm run test:e2e
+### 👋 시설 찜 기능 및 관심 시설 알림 기능 제공
+시설 찜 기능을 통해 사용자는 관심 시설을 등록하고 한눈에 정리할 수 있으며, 알림 페이지에서 신규 강좌 개설 정보를 받아 번거로움 없이 필요한 정보를 쉽게 확인할 수 있다.
 
-# test coverage
-$ npm run test:cov
-```
+![image](https://github.com/user-attachments/assets/545eadca-17cf-4f53-9b1f-0ab4f49bec7f)
 
-## Resources
 
-Check out a few resources that may come in handy when working with NestJS:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+<br/>
 
-## Support
+## 💚 TechStack
+### 🚀 Stacks
+![NestJS](https://img.shields.io/badge/NestJS-131010?style=for-the-badge&logo=NestJS&logoColor=E0234E)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-9694FF?style=for-the-badge&logo=Prisma&logoColor=2D3748)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=Jest&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Kysely](https://img.shields.io/badge/kysely-4169E1?style=for-the-badge)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+<br/>
 
-## Stay in touch
+![EC2](https://img.shields.io/badge/EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white)
+![ALB](https://img.shields.io/badge/ALB-8C4FFF?style=for-the-badge&logo=awselasticloadbalancing&logoColor=white)
+![Lambda](https://img.shields.io/badge/Lambda-FF9900?style=for-the-badge&logo=awslambda&logoColor=white)
+![RDS](https://img.shields.io/badge/RDS-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white)
+![CloudFront](https://img.shields.io/badge/CloudFront-0078D4?style=for-the-badge)
+![EventBridge](https://img.shields.io/badge/EventBridge-0078D4?style=for-the-badge)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+<br/>
+
+## 💙 Architecture
+![image](https://github.com/user-attachments/assets/7b01ef9b-12bc-4736-9392-eb26c3917bab)
+
+<br/>
+
+
+## 💚 Developers
+|<img src="https://avatars.githubusercontent.com/u/125109615?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/57613101?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/57895643?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/165978255?v=4" width="150" height="150"/>|
+|:-:|:-:|:-:|:-:|
+|정성혜<br/>[@eqypo9](https://github.com/eqypo9)<br/>`프론트엔드`|조혜진<br/>[@MEGUMMY1](https://github.com/MEGUMMY1)<br/>`프론트엔드`|임종훈<br/>[@leemhoon00](https://github.com/leemhoon00)<br/>`백엔드`|홍수연<br/>[@suyeonhong99](https://github.com/suyeonhong99)<br/>`디자이너`|
+
+
